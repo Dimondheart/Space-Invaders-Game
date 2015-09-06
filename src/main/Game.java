@@ -1,17 +1,19 @@
 package main;
 
 import main.gamestate.*;
+import main.gfx.Gfx;
 
 /** Represents a game session, handling initialization and general game events
  * or actions
  */
 public class Game
 {
-	// The object used for thread timing and tick handling
+	/** The clock/cycle controller for this thread. */
 	private ThreadClock clock;
-	
-	// Current state of the game
+	/** Current state of the game. */
 	private GameState gameState;
+	/** The primary graphics handling object. */
+	main.gfx.Gfx graphics;
 	
 	/** Default constructor, creates instances of important objects. */
 	public Game()
@@ -23,7 +25,10 @@ public class Game
 	/** Initializes core components then calls the run function. */
 	public void start()
 	{
+		// Select a game state to start with
 		gameState = new MainMenu();
+		// Create the main window/frame
+		graphics = new main.gfx.Gfx(gameState);
 		run();
 	}
 	
@@ -46,11 +51,9 @@ public class Game
 			gameState.cleanup();
 			// Gets the new object for the state
 			gameState = makeNewGameState(gameState.getNewState());
-			// Check if the new state is one of the quit program states
-			if (gameState == null)
-			{
-				quit();
-			}
+			// Update the game state in graphics
+			// TODO: Implement autochecking/update of this
+			Gfx.updateGameState(gameState);
 		}
 	}
 	
@@ -73,7 +76,7 @@ public class Game
 		
 		// Quit is a game state that indicates program should be terminated
 		case QUIT:
-			return null;
+			quit();
 			
 		// Default to the main menu
 		default:

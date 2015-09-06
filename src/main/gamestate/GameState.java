@@ -1,6 +1,8 @@
 package main.gamestate;
 
-/** Base Class for a game state. */
+/** Base Class for a game state. Import this as an interface for all
+ * the game states.
+ */
 public abstract class GameState
 {
 	/** Indicates when to transition out of this class. */
@@ -21,6 +23,8 @@ public abstract class GameState
 	public abstract void cycle();
 	/** Stuff to clean up when transitioning out of a game state. */
 	public abstract void cleanup();
+	/** Renders all graphics for a game state. */
+	public abstract void render();
 	
 	/** Checks if the game state should be transitioned to another state.
 	 * @return True if the state should be transitioned
