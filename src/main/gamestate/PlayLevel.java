@@ -1,7 +1,6 @@
 package main.gamestate;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 import main.gfx.Gfx;
 
@@ -14,7 +13,7 @@ public class PlayLevel extends GameState
 	// TODO?: Create a constructor for specifying a different starting level
 	
 	@Override
-	public synchronized void setup()
+	protected synchronized void initialize()
 	{
 		// TODO Auto-generated method stub
 	}
@@ -40,19 +39,14 @@ public class PlayLevel extends GameState
 	}
 
 	@Override
-	public synchronized void render()
+	protected synchronized void renderState()
 	{
-		Graphics2D bottomLayer = Gfx.getLayerSurface(0);
-		Graphics2D layer1 = Gfx.getLayerSurface(1);
-		layer1.setColor(Color.cyan);
-		// Yes, I am having fun drawing on a higher layer first :3
-		layer1.fillRect(
-				Gfx.getRenderAreaWidth()/4,
+		layers[0].setColor(Color.cyan);
+		layers[0].fillRect(
 				0,
-				Gfx.getRenderAreaWidth()/2,
+				0,
+				Gfx.getRenderAreaWidth(),
 				Gfx.getRenderAreaHeight()
 				);
-		bottomLayer.setColor(Color.black);
-		bottomLayer.fillRect(0, 0, Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight());
 	}
 }

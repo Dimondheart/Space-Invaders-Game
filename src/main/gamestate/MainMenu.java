@@ -1,7 +1,6 @@
 package main.gamestate;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 import main.gfx.Gfx;
 
@@ -9,12 +8,6 @@ import main.gfx.Gfx;
 public class MainMenu extends GameState
 {
 	private int counter = 0;
-	
-	@Override
-	public synchronized void setup()
-	{
-		// TODO: Implement setup
-	}
 
 	@Override
 	public synchronized void cycle()
@@ -37,20 +30,29 @@ public class MainMenu extends GameState
 	}
 	
 	@Override
-	public synchronized void render()
+	protected synchronized void initialize()
 	{
-		System.out.println("Got there");
-		// TODO: Actually implement drawing and not this dummy implementation
-		// Translated: I can't believe this actually worked the first time!
-		// TODO: Create a method in GameState/Gfx that gets a spec. # of layer surfaces
-		Graphics2D bottomLayer = Gfx.getLayerSurface(0);
-		Graphics2D layer2 = Gfx.getLayerSurface(1);
-		Graphics2D layer3 = Gfx.getLayerSurface(2);
-		layer2.setColor(Color.yellow);
-		layer2.fillRect(0, 0, Gfx.getRenderAreaWidth()/2, Gfx.getRenderAreaHeight()/2);
-		layer3.setColor(Color.blue);
-		layer3.fillRect(0, 0, Gfx.getRenderAreaWidth()/4, Gfx.getRenderAreaHeight()/4);
-		bottomLayer.setColor(Color.black);
-		bottomLayer.fillRect(0, 0, Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight());
+		// TODO: Implement setup
+	}
+	
+	@Override
+	protected synchronized void renderState()
+	{
+		// TODO: Implement 'actual' rendering
+		// Dummy implementation of rendering
+		layers[0].setColor(Color.yellow);
+		layers[0].fillRect(
+				0,
+				0,
+				Gfx.getRenderAreaWidth(),
+				Gfx.getRenderAreaHeight()
+				);
+		layers[1].setColor(Color.blue);
+		layers[1].fillRect(
+				0,
+				0,
+				Gfx.getRenderAreaWidth()/2,
+				Gfx.getRenderAreaHeight()/2
+				);
 	}
 }
