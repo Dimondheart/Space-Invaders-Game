@@ -1,6 +1,6 @@
 package main;
 
-/** Manages timing for the thread of the object that instantiates it. */
+/** Manages timing for the thread of an object that instantiates it. */
 public class ThreadClock
 {
 	// Thread priorities, affects time per cycle
