@@ -2,6 +2,7 @@ package main.gfx;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -21,6 +22,8 @@ public class Layer extends JPanel
 	private BufferedImage buffImg;
 	/** The buffered image's surface for this layer. */
 	private Graphics2D buffSurf;
+	/** The color the drawing surface is cleared to. */
+	private Color bgColor = new Color(0,0,0,0);
 	
 	/** The normal constructor for a Layer.
 	 * @param width of the layer
@@ -38,7 +41,7 @@ public class Layer extends JPanel
 	/** Gets the buffered surface of this frame to draw on.
 	 * @return (Graphics2D) The buffered drawing surface
 	 */
-	public Graphics2D getDrawingSurface()
+	public synchronized Graphics2D getDrawingSurface()
 	{
 		return buffSurf;
 	}
@@ -61,15 +64,23 @@ public class Layer extends JPanel
 				buffImg,
 				0,
 				0,
-				Gfx.getRenderAreaWidth(),
-				Gfx.getRenderAreaHeight(),
+				Gfx.getFrameWidth(),
+				Gfx.getFrameHeight(),
 				null
 				);
 	}
 	
-	/** TODO: figure out how to clear a transparent surface. */
-	public void clear()
+	/** Clears the buffer of this layer. */
+	public synchronized void clear()
 	{
-		
+		// Get the old composite to reset to
+		Composite oldComp = buffSurf.getComposite();
+		// Change the composite
+		buffSurf.setComposite(AlphaComposite.Clear);
+//		buffSurf.setColor(bgColor);
+		// Clear the surface
+		buffSurf.fillRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
+		// Set the composite back to the original
+		buffSurf.setComposite(oldComp);
 	}
 }

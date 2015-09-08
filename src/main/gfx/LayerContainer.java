@@ -24,15 +24,17 @@ public class LayerContainer extends JLayeredPane
 		layers = new Layer[Gfx.NUM_LAYERS];
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
-			layers[i] = new Layer(Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight());
+			layers[i] = new Layer(Gfx.getFrameWidth(), Gfx.getFrameHeight());
 			layers[i].setPreferredSize(
-					new Dimension(Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight())
+					new Dimension(Gfx.getFrameWidth(), Gfx.getFrameHeight())
 					);
 			add(layers[i], i);
 		}
 	}
 	
-	/** Gets the drawing surface for the specified layer. */
+	/** Gets the drawing surface for the specified layer.
+	 * @param layer the index of the layer
+	 */
 	public Graphics2D getDrawingSurface(int layer)
 	{
 		return layers[layer].getDrawingSurface();
@@ -46,6 +48,32 @@ public class LayerContainer extends JLayeredPane
 		gameState = newGameState;
 	}
 	
+	/** Clears the specified layer.
+	 * @param layer the index of the layer.
+	 */
+	public synchronized void clearLayer(int layer)
+	{
+		layers[layer].clear();
+	}
+	
+	/** Clears all layers. */
+	public synchronized void clearAllLayers()
+	{
+		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
+		{
+			clearLayer(i);
+		}
+	}
+	
+	/** Clears only the specified layers. */
+	public synchronized void clearLayers(int[] layersToClear)
+	{
+		for (int i : layersToClear)
+		{
+			layers[i].clear();
+		}
+	}
+	
 	protected synchronized void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
@@ -53,7 +81,7 @@ public class LayerContainer extends JLayeredPane
 		gameState.render();
 		// Clear the graphics context
 		g2.setBackground(Color.black);
-		g2.clearRect(0, 0, Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight());
+		g2.clearRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
 		/* Temporary dummy implementation of rendering layers. */
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
