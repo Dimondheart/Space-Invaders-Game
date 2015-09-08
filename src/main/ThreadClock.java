@@ -1,5 +1,6 @@
 package main;
 
+// TODO: make this a part of my own class/layer over threads.
 /** Manages timing for the thread of an object that instantiates it. */
 public class ThreadClock
 {

@@ -48,6 +48,8 @@ public class Gfx implements Runnable
 		clock = new ThreadClock();
 	}
 	
+	// TODO?: Modify this to be some kind of override in ThreadClock
+	/** Starts this thread after any final initialization operations. */
 	public void start()
 	{
 		// Finalize the window
@@ -67,28 +69,18 @@ public class Gfx implements Runnable
 		}
 	}
 	
-	/** Gets the primary window frame, used for most rendering.
-	 * @return (JFrame) A reference to the primary frame
-	 */
-	public static JFrame getPrimaryFrame()
-	{
-		return mainFrame;
-	}
-	
-	// TODO: Rename this so it's not soooo long
 	/** Returns the width of the render area.
 	 * @returns (int) the width in pixels
 	 */
-	public static int getRenderAreaWidth()
+	public static int getFrameWidth()
 	{
 		return renderAreaWidth;
 	}
 	
-	// TODO: Rename this so it's not soooo long
 	/** Returns the height of the render area.
 	 * @returns (int) the height in pixels
 	 */
-	public static int getRenderAreaHeight()
+	public static int getFrameHeight()
 	{
 		return renderAreaHeight;
 	}
@@ -99,13 +91,14 @@ public class Gfx implements Runnable
 	 * <br>
 	 * <br>0-1: Background Layers
 	 * <br>2-4: Main Content Layers
-	 * <br>5-6: Foreground Layers
+	 * <br>5-6: Foreground Layers (Like a GUI)
 	 * <br>
 	 * <br> Using sub-layers (meaning within a layer, first drawn =
 	 * lowest sub-layer, last drawn = highest sub-layer) should be preferred
-	 * where possible; use layers to simplify graphics operations, like
-	 * rendering a tile of a tile-based map at the same time as the entities
-	 * that are in that tile.
+	 * where possible.  Use layers to simplify graphics operations, like
+	 * rendering a tile of a tile grid at about the same time as the entities
+	 * in that tile, or rendering background animations over a
+	 * background image that doesn't change.
 	 * @param layer the index of the layer.
 	 * @return (Graphics2D) The graphics context to render to.
 	 */
@@ -114,8 +107,36 @@ public class Gfx implements Runnable
 		return layerContainer.getDrawingSurface(layer);
 	}
 	
+	/** Updates the local reference to the game state.  Used to call game state
+	 * render methods.
+	 * @param newGameState the new game state
+	 */
 	public static void updateGameState(GameState newGameState)
 	{
 		layerContainer.updateGameState(newGameState);
+	}
+	
+	/** Clears the drawing surface of the specified layer.
+	 * After clearing, any references to the drawing surface may need to be
+	 * updated with {@link #getLayerSurface(int)}.
+	 * @param layer the index of the layer
+	 */
+	public static synchronized void clearLayer(int layer)
+	{
+		layerContainer.clearLayer(layer);
+	}
+	
+	/** Clears all layers drawing surfaces. */
+	public static synchronized void clearAllLayers()
+	{
+		layerContainer.clearAllLayers();
+	}
+	
+	/** Clears only the specified layers.
+	 * @param layers the list of indexes of layers to clear
+	 */
+	public static synchronized void clearLayers(int[] layers)
+	{
+		layerContainer.clearLayers(layers);
 	}
 }
