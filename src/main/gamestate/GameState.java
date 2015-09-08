@@ -2,6 +2,8 @@ package main.gamestate;
 
 import java.awt.Graphics2D;
 
+import main.gfx.Gfx;
+
 /** Base Class for a game state. Import this as an interface for all
  * the game states.
  */
@@ -11,7 +13,9 @@ public abstract class GameState
 	public boolean changeState = false;
 	/** Specifies the type of the game state to transition to next. */
 	public GameStates newState = GameStates.MAIN_MENU;
-	/***/
+	/** List of the drawing surfaces for each layer, in order
+	 * (0 = lowest layer).
+	 */
 	protected Graphics2D[] layers = new Graphics2D[main.gfx.Gfx.NUM_LAYERS];
 	
 	/** The different types of states the game can be in. */
@@ -62,7 +66,11 @@ public abstract class GameState
 	 */
 	public void setup()
 	{
+		// Update the reference to this object in graphics
 		main.gfx.Gfx.updateGameState(this);
+		// Clear all the layers
+		Gfx.clearAllLayers();
+		// Calls the state-specific setup function
 		initialize();
 	}
 	
