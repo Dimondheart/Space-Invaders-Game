@@ -40,19 +40,20 @@ public class MainMenu extends GameState
 	{
 		// TODO: Implement 'actual' rendering
 		// Dummy implementation of rendering
+		Gfx.clearAllLayers();
 		layers[0].setColor(Color.yellow);
 		layers[0].fillRect(
 				0,
 				0,
-				Gfx.getRenderAreaWidth(),
-				Gfx.getRenderAreaHeight()
+				Gfx.getFrameWidth(),
+				Gfx.getFrameHeight()
 				);
 		layers[1].setColor(Color.blue);
 		layers[1].fillRect(
 				0,
 				0,
-				Gfx.getRenderAreaWidth()/2,
-				Gfx.getRenderAreaHeight()/2
+				Gfx.getFrameWidth()/2,
+				Gfx.getFrameHeight()/2
 				);
 	}
 }
