@@ -1,10 +1,10 @@
 package main.inputdevice;
 
 /** The interface for a basic input device, like a mouse or keyboard. */
-public interface InputDevice
+public abstract class InputDevice
 {
 	/** Clears all stored input device data. */
-	public void clear();
+	public abstract void clear();
 	/** Process and react to stored input data. */
-	public void poll();
+	public abstract void poll();
 }

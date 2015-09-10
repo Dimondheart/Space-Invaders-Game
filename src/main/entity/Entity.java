@@ -7,5 +7,13 @@ import main.entity.entitycomponent.*;
  */
 public abstract class Entity
 {
+	public Body body;
+	public Render render;
 	public Health health;
+	public Weapon weapon;
+	
+	/** Basic constructor. */
+	public Entity()
+	{
+	}
 }

@@ -3,23 +3,23 @@ package main.gamestate;
 import java.awt.Color;
 
 import main.gfx.Gfx;
+import main.inputdevice.InputManager;
+
+import static java.awt.event.KeyEvent.*;
+import static java.awt.event.MouseEvent.*;
 
 /** The main menu, which appears first on game startup. */
 public class MainMenu extends GameState
 {
-	private int counter = 0;
-
 	@Override
-	public synchronized void cycle()
+	public synchronized void cycleState()
 	{
 		// TODO: Implement functionality
 		System.out.println("In Main Menu");
 		// Dummy implementation of transitioning to a level
-		++counter;
-		if (counter > 50)
+		if (InputManager.getKeyboard().isKeyDownOnce(VK_ENTER))
 		{
-			newState = GameStates.PLAY_LEVEL;
-			changeState = true;
+			changeState(GameStates.PLAY_LEVEL);
 		}
 	}
 
