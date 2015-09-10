@@ -6,7 +6,7 @@ package main.gamestate;
 public class QuitGame extends GameState
 {
 	@Override
-	public void cycle()
+	public void cycleState()
 	{
 	}
 

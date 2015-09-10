@@ -3,32 +3,42 @@ package main.gamestate;
 import java.awt.Color;
 
 import main.gfx.Gfx;
+import main.inputdevice.InputManager;
+
+import static java.awt.event.KeyEvent.*;
+import static java.awt.event.MouseEvent.*;
 
 /** Game state when a level has been loaded and should be started. */
 public class PlayLevel extends GameState
 {
-	private boolean renderBG = true;
-	private int counter = 0;
+	private boolean renderBG;
+	private boolean paused;
+	private Color pauseBGColor;
 	
 	// TODO: Create a constructor for specifying the starting level
 	
 	@Override
 	protected synchronized void initialize()
 	{
-		// TODO: Add setup stuff
+		renderBG = true;
+		paused = false;
+		pauseBGColor = new Color(128,128,128,128);
 	}
 
 	@Override
-	public synchronized void cycle()
+	public synchronized void cycleState()
 	{
 		// TODO: Implement functionality
 		System.out.println("In Level");
-		// Dummy transition to quitting the game
-		++counter;
-		if (counter > 50)
+		// Pause the level
+		if (InputManager.getKeyboard().isKeyDownOnce(VK_ESCAPE))
 		{
-			newState = GameStates.QUIT;
-			changeState = true;
+			paused = !paused;
+		}
+		// Dummy transition to quitting the game
+		if (paused && InputManager.getMouse().isBtnClicked(BUTTON1))
+		{
+			changeState(GameStates.QUIT);
 		}
 	}
 
@@ -41,7 +51,7 @@ public class PlayLevel extends GameState
 	@Override
 	protected synchronized void renderState()
 	{
-		int[] layersToClear = {1,2};
+		int[] layersToClear = {1,2,5};
 		Gfx.clearLayers(layersToClear);
 		// Test with being able to render a layer once without clearing it
 		if (renderBG)
@@ -71,5 +81,11 @@ public class PlayLevel extends GameState
 				Gfx.getFrameWidth()/2,
 				Gfx.getFrameHeight()/2
 				);
+		// Draw pause related stuff
+		if (paused)
+		{
+			layers[5].setColor(pauseBGColor);
+			layers[5].fillRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
+		}
 	}
 }

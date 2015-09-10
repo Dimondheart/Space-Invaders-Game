@@ -2,10 +2,11 @@ package main.inputdevice;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.JFrame;
 
 // TODO: Rewrite this to work as an event dispatcher
 /** Handles processing of keyboard events. */
-public class KeyboardInput implements KeyListener, InputDevice
+public class KeyboardInput extends InputDevice implements KeyListener
 {
 	// Number of key values to be used
 	private static final int KEY_COUNT = 256;
@@ -24,9 +25,10 @@ public class KeyboardInput implements KeyListener, InputDevice
 	// Polled keyboard state
 	private KeyState[] keys = null;
 	
-	/** Default constructor, sets up stored input data. */
-	public KeyboardInput()
+	/** Constructor, takes a reference to the frame it adds itself to. */
+	public KeyboardInput(JFrame frame)
 	{
+		frame.addKeyListener(this);
 		clear();
 	}
 	
@@ -75,10 +77,10 @@ public class KeyboardInput implements KeyListener, InputDevice
 	/** Checks if the specified key is pressed down.
 	 * @return True if the key is pressed
 	 */
-	public boolean keyDown(int keyCode)
+	public boolean isKeyDown(int keyCode)
 	{
 		return (
-				keys[keyCode] == KeyState.ONCE ||
+				isKeyDownOnce(keyCode) ||
 				keys[keyCode] == KeyState.PRESSED
 				);
 	}
@@ -87,7 +89,7 @@ public class KeyboardInput implements KeyListener, InputDevice
 	 * since the last poll.
 	 * @return True if the key was first pressed during the last poll.
 	 */
-	public boolean keyDownOnce(int keyCode)
+	public boolean isKeyDownOnce(int keyCode)
 	{
 		return (keys[keyCode] == KeyState.ONCE);
 	}

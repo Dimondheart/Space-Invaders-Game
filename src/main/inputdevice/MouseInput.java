@@ -1,10 +1,10 @@
 package main.inputdevice;
 
 import java.awt.event.*;
-import java.awt.event.MouseAdapter;
+import javax.swing.JFrame;
 
 //TODO: Rewrite this to work as an event dispatcher
-public class MouseInput extends MouseAdapter implements InputDevice
+public class MouseInput extends InputDevice implements MouseListener, MouseWheelListener, MouseMotionListener
 {
 	// Number of key values to be used
 	private static final int BTN_COUNT = 3;
@@ -24,9 +24,12 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	// Polled mouse state
 	private BtnState[] btns = null;
 	
-	/** Default constructor, sets up stored input data. */
-	public MouseInput()
+	/** Constructor, takes a reference to the frame it should be added to. */
+	public MouseInput(JFrame frame)
 	{
+		frame.addMouseListener(this);
+//		frame.addMouseMotionListener(this);
+		frame.addMouseWheelListener(this);
 		clear();
 	}
 	
@@ -80,10 +83,10 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	/** Checks if the specified button is pressed down.
 	 * @return True if the button is pressed
 	 */
-	public boolean btnDown(int btnCode)
+	public boolean isBtnDown(int btnCode)
 	{
 		return (
-				btnDownOnce(btnCode) ||
+				isBtnDownOnce(btnCode) ||
 				btns[btnCode] == BtnState.PRESSED
 				);
 	}
@@ -92,7 +95,7 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	 * since the last poll.
 	 * @return True if the button was first pressed during the last poll.
 	 */
-	public boolean btnDownOnce(int btnCode)
+	public boolean isBtnDownOnce(int btnCode)
 	{
 		return (btns[btnCode] == BtnState.ONCE);
 	}
@@ -101,7 +104,7 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	 * and the release was during the last poll.
 	 * @return True if the button was released first during the last poll
 	 */
-	public boolean btnClicked(int btnCode)
+	public boolean isBtnClicked(int btnCode)
 	{
 		return (btns[btnCode] == BtnState.CLICKED);
 	}
@@ -109,25 +112,21 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		System.out.println(e);
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		System.out.println(e);
 	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		System.out.println(e);
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		System.out.println(e);
 	}
 	
 	@Override
@@ -164,6 +163,5 @@ public class MouseInput extends MouseAdapter implements InputDevice
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
-		System.out.println(e);
 	}
 }

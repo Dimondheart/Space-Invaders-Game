@@ -85,6 +85,15 @@ public class Gfx implements Runnable
 		return renderAreaHeight;
 	}
 	
+	/** Gets the primary JFrame for the game.
+	 * 
+	 * @return (JFrame) a reference to the current primary frame
+	 */
+	public static JFrame getPrimaryFrame()
+	{
+		return mainFrame;
+	}
+	
 	/** Gets the drawing surface for the specified layer.
 	 * <br>There are 7 layers in total.
 	 * They should be used as follows:
@@ -120,13 +129,16 @@ public class Gfx implements Runnable
 	 * After clearing, any references to the drawing surface may need to be
 	 * updated with {@link #getLayerSurface(int)}.
 	 * @param layer the index of the layer
+	 * @see {@link #getLayerSurface(int)}
 	 */
 	public static synchronized void clearLayer(int layer)
 	{
 		layerContainer.clearLayer(layer);
 	}
 	
-	/** Clears all layers drawing surfaces. */
+	/** Clears all layers drawing surfaces.
+	 * @see {@link #getLayerSurface(int)}
+	 */
 	public static synchronized void clearAllLayers()
 	{
 		layerContainer.clearAllLayers();
@@ -134,6 +146,7 @@ public class Gfx implements Runnable
 	
 	/** Clears only the specified layers.
 	 * @param layers the list of indexes of layers to clear
+	 * @see {@link #getLayerSurface(int)}
 	 */
 	public static synchronized void clearLayers(int[] layers)
 	{
