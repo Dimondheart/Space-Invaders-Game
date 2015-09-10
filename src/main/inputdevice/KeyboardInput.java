@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
-// TODO: Rewrite this to work as an event dispatcher
+// TODO?: Rewrite this to work as an event dispatcher
 /** Handles processing of keyboard events. */
 public class KeyboardInput extends InputDevice implements KeyListener
 {

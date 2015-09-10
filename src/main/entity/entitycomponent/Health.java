@@ -5,4 +5,36 @@ package main.entity.entitycomponent;
  */
 public class Health
 {
+	/** The initial number of hits that can be taken. */
+	private int maxHP;
+	/** The current health of the entity. */
+	private int hp;
+	
+	public Health()
+	{
+		this.maxHP = 0;
+		hp = this.maxHP;
+	}
+	
+	/** Constructor, takes an int for the initial hitpoints. */
+	public Health(int maxHP)
+	{
+		this.maxHP = maxHP;
+		hp = this.maxHP;
+	}
+	
+	/** Checks if this entity is dead/taken its max hits. */
+	public boolean isDestroyed()
+	{
+		return (hp == 0);
+	}
+	
+	/** Damages the entities hitpoints. */
+	public void hit()
+	{
+		if (hp > 0)
+		{
+			--hp;
+		}
+	}
 }

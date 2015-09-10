@@ -12,6 +12,9 @@ import main.ThreadClock;
  */
 public class Gfx implements Runnable
 {
+	/* TODO: Add a way to pause rendering when the window is
+	 * minimized/iconified.
+	 */
 	/** The name of the primary game frame. */
 	public static final String MAIN_FRAME_NAME = "Space Invaders";
 	/** Number of layers in the primary window. */

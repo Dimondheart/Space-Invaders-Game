@@ -101,6 +101,11 @@ public abstract class GameState
 	/** Renders the current game state. */
 	public void render()
 	{
+		// Don't bother rendering if quit is indicated or moving into quit
+		if (quitIndicated || (stateChange && newState == GameStates.QUIT))
+		{
+			return;
+		}
 		// Update the list of drawing surfaces for the layers
 		for (int i = 0; i < main.gfx.Gfx.NUM_LAYERS; ++i)
 		{

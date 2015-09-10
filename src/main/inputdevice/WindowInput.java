@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import main.gamestate.GameState;
 
+/** Event listener for window-related events. */
 public class WindowInput extends InputDevice implements WindowListener
 {
 	/** Constructor which takes a reference to the frame it will

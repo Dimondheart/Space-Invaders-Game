@@ -3,7 +3,8 @@ package main.inputdevice;
 import java.awt.event.*;
 import javax.swing.JFrame;
 
-//TODO: Rewrite this to work as an event dispatcher
+//TODO?: Rewrite this to work as an event dispatcher
+/** Handles mouse input events. */
 public class MouseInput extends InputDevice implements MouseListener, MouseWheelListener, MouseMotionListener
 {
 	// Number of key values to be used
