@@ -1,6 +1,9 @@
 package main.entity.entitycomponent;
 
-/** Handles all entity details having to do with the grid and collisions. */
+/** Handles all entity details having to do with the grid and collisions.
+ * Development note; many of the unused values/methods in here are for when
+ * I get around to implementing collision boxes instead of collision circles.
+ */
 public class Body
 {
 	/* TODO: Idea for rectangular collisions.
@@ -8,8 +11,6 @@ public class Body
 	 * at the center.
 	 * Use the coordinates of the corners for some kind of distance checking.
 	 */
-	/** Radius of the entities collision area. */
-	private int radius;
 	/* Remember to keep a grid separate from the screen for position stuff. */
 	/** The x position. */
 	private int x;
@@ -17,14 +18,23 @@ public class Body
 	private int y;
 	/** The movement vector of this entity. */
 	private int[] vector;
+	/** Radius of the entities collision area. */
+	private int radius;
+	/** Width of this entity. */
+	private int width;
+	/** Height of this entity. */
+	private int height;
+	/** Sets if the entity should be stopped by map edges. Default is true. */
+	private boolean stopAtEdge = true;
 	
 	/** Basic constructor. */
 	public Body()
 	{
-		radius = 0;
+		radius = 20;
 		vector = new int[2];
 		vector[0] = 0;
 		vector[1] = 0;
+		setPos(200, getRadius() + 4);
 	}
 	
 	/** Constructor, takes an argument for the collision area radius. */
@@ -32,34 +42,140 @@ public class Body
 	{
 		radius = newRadius;
 		vector = new int[2];
-		vector[0] = 0;
-		vector[1] = 0;
+		setVector(0, 0);
+		setPos(200, getRadius() + 4);
 	}
 	
-	/** Sets the x position of this entity. */
-	public void setX(int newX)
+	/** Checks if this body has passed an edge of the map/grid. */
+	public boolean isPastEdge()
 	{
-		// Don't go outside the game area
-		if (newX > 0)
+		// Don't bother to check if the entity is stopped by edges
+		if (stopAtEdge)
 		{
-			x = newX;
+			return false;
 		}
-	}
-	
-	/** Sets the y position of this entity. */
-	public void setY(int newY)
-	{
-		// Don't go outside the game area
-		if (newY > 0)
+		else if (getX() < 0 || getX() > 400 || getY() < 0 || getY() > 400)
 		{
-			y = newY;
+			return true;
 		}
-	}
-	
-	/** Checks if the other specified entity is touching this one. */
-	public boolean isTouching(Body otherBody)
-	{
-		// TODO: Stub method
 		return false;
+	}
+	
+	/** Gets the current x coordinate. */
+	public int getX()
+	{
+		return x;
+	}
+	
+	/** Gets the current y coordinate. */
+	public int getY()
+	{
+		return y;
+	}
+	
+	/** Gets the radius of this body. */
+	public int getRadius()
+	{
+		return radius;
+	}
+	
+	/** Set the position of this body.
+	 * Using <tt>move()</tt> along with adjusting the vector should be used
+	 * for normal movement.
+	 * @param newX the new x coordinate
+	 * @param newY the new y coordinate
+	 */
+	public synchronized void setPos(int newX, int newY)
+	{
+		setX(newX);
+		setY(newY);
+	}
+	
+	/** Sets the x coordinate of this body.
+	 * @param newX the new x coordinate
+	 */
+	public synchronized void setX(int newX)
+	{
+		x = newX;
+	}
+	
+	/** Sets the y coordinate of this body.
+	 * @param newY the new y coordinate
+	 */
+	public synchronized void setY(int newY)
+	{
+		y = newY;
+	}
+	
+	/** Sets the movement vector of this body.
+	 * @param x the new x component
+	 * @param y the new y component
+	 */
+	public synchronized void setVector(int x, int y)
+	{
+		setXVector(x);
+		setYVector(y);
+	}
+	
+	/** Sets only the x component of the movement vector.
+	 * @param x the new x component
+	 */
+	public synchronized void setXVector(int x)
+	{
+		vector[0] = x;
+	}
+	
+	/** Sets only the y component of the movement vector.
+	 * @param y the new y component
+	 */
+	public synchronized void setYVector(int y)
+	{
+		vector[1] = y;
+	}
+	
+	/** Specify if this body should stop or not when it hits a map edge.
+	 * @param stop (boolean) <tt>true</tt> to stop at edges
+	 */
+	public synchronized void setStopAtEdge(boolean stop)
+	{
+		stopAtEdge = stop;
+	}
+	
+	/** Checks if the other specified body is touching this one.
+	 * @param otherBody the other body to check for a collision with
+	 */
+	public synchronized boolean isTouching(Body otherBody)
+	{
+		// Get the distance between the two body centers
+		int distance = (int)Math.hypot(
+				(double)(getX() - otherBody.getX()),
+				(double)(getY() - otherBody.getY())
+				);
+		// See if they would be closer than their total radius distance
+		if (distance <= getRadius() + otherBody.getRadius())
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/** Moves the body using its movement vector. */
+	public void move()
+	{
+		// Determine new coords
+		int newX = getX() + vector[0];
+		int newY = getY() + vector[1];
+		// If the body is set to not stop at edges
+		if (!stopAtEdge)
+		{
+			setX(getX() + vector[0]);
+			setY(getY() + vector[1]);
+		}
+		// Otherwise stop at any edges
+		else if ((0 <= newX && newX <= 400) && (0 < newY && newY < 400))
+		{
+			setX(getX() + vector[0]);
+			setY(getY() + vector[1]);
+		}
 	}
 }
