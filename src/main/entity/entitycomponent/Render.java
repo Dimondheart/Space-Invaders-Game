@@ -1,6 +1,6 @@
 package main.entity.entitycomponent;
 
-/** Handles rendering of an entity's graphics. */
+/** Handles miscellaneous stuff related to entity rendering. */
 public class Render
 {
 	/** The name of this sprite's graphics. */
@@ -18,12 +18,5 @@ public class Render
 	public Render(String spriteName)
 	{
 		this.spriteName = spriteName;
-	}
-	
-	/** Renders the entity. */
-	public synchronized void render()
-	{
-		System.out.println("In entity.render.render...");
-		// TODO: Implement rendering
 	}
 }

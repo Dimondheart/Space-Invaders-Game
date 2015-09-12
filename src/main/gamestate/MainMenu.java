@@ -6,7 +6,7 @@ import main.gfx.Gfx;
 import main.inputdevice.InputManager;
 
 import static java.awt.event.KeyEvent.*;
-import static java.awt.event.MouseEvent.*;
+import static main.inputdevice.MouseInput.*;
 
 /** The main menu, which appears first on game startup. */
 public class MainMenu extends GameState
@@ -14,12 +14,18 @@ public class MainMenu extends GameState
 	@Override
 	public synchronized void cycleState()
 	{
-		// TODO: Implement functionality
-		System.out.println("In Main Menu");
 		// Dummy implementation of transitioning to a level
-		if (InputManager.getKeyboard().isKeyDownOnce(VK_ENTER))
+		if (
+			InputManager.getKeyboard().isKeyDownOnce(VK_ENTER) ||
+			InputManager.getMouse().isBtnClicked(LEFT_BUTTON)
+			)
 		{
 			changeState(GameStates.PLAY_LEVEL);
+		}
+		// Quit
+		else if (InputManager.getKeyboard().isKeyDown(VK_ESCAPE))
+		{
+			changeState(GameStates.QUIT);
 		}
 	}
 
@@ -50,8 +56,8 @@ public class MainMenu extends GameState
 				);
 		layers[1].setColor(Color.blue);
 		layers[1].fillRect(
-				0,
-				0,
+				Gfx.getFrameWidth()/4,
+				Gfx.getFrameHeight()/4,
 				Gfx.getFrameWidth()/2,
 				Gfx.getFrameHeight()/2
 				);

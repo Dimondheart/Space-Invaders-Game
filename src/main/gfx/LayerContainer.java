@@ -70,7 +70,7 @@ public class LayerContainer extends JLayeredPane
 	{
 		for (int i : layersToClear)
 		{
-			layers[i].clear();
+			clearLayer(i);
 		}
 	}
 	

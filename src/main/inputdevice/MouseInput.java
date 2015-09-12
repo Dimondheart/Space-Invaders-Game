@@ -3,14 +3,23 @@ package main.inputdevice;
 import java.awt.event.*;
 import javax.swing.JFrame;
 
+import static java.awt.event.MouseEvent.*;
+
 //TODO?: Rewrite this to work as an event dispatcher
 /** Handles mouse input events. */
 public class MouseInput extends InputDevice implements MouseListener, MouseWheelListener, MouseMotionListener
 {
-	// Number of key values to be used
-	private static final int BTN_COUNT = 3;
+	/** Left mouse button. */
+	public static final int LEFT_BUTTON = BUTTON1;
+	/** Middle mouse button. */
+	public static final int MIDDLE_BUTTON = BUTTON2;
+	/** Right mouse button. */
+	public static final int RIGHT_BUTTON = BUTTON3;
 	
-	// States each button can be in
+	/** Number of key values to be used. */
+	private static final int BTN_COUNT = 4;
+	
+	/** States each button can be in. */
 	private enum BtnState
 		{
 			RELEASED,  // Not down
@@ -19,10 +28,10 @@ public class MouseInput extends InputDevice implements MouseListener, MouseWheel
 			CLICKED  // Button was pressed, then first released this frame
 		}
 		
-	// Current state of the mouse
+	/** Current state of the mouse. */
 	private boolean[] currentBtns = null;
 	
-	// Polled mouse state
+	/** Polled mouse state. */
 	private BtnState[] btns = null;
 	
 	/** Constructor, takes a reference to the frame it should be added to. */

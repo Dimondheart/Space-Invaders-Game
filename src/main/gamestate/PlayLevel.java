@@ -15,24 +15,23 @@ public class PlayLevel extends GameState
 	private boolean renderBG;
 	private boolean paused;
 	private Color pauseBGColor;
-	private Entity testPlayer;
+	private EntityManager entityManager;
 	
 	// TODO: Create a constructor for specifying the starting level
 	
 	@Override
 	protected synchronized void initialize()
 	{
-		testPlayer = new PlayerShip();
 		renderBG = true;
 		paused = false;
 		pauseBGColor = new Color(128,128,128,128);
+		// Create the entity manager
+		entityManager = new EntityManager();
 	}
 
 	@Override
 	public synchronized void cycleState()
 	{
-		// TODO: Implement functionality
-		System.out.println("In Level");
 		// Pause the level
 		if (InputManager.getKeyboard().isKeyDownOnce(VK_ESCAPE))
 		{
@@ -41,27 +40,32 @@ public class PlayLevel extends GameState
 		// Dummy transition to quitting the game
 		if (paused && InputManager.getMouse().isBtnClicked(BUTTON1))
 		{
-			changeState(GameStates.QUIT);
+			changeState(GameStates.MAIN_MENU);
+		}
+		// Update the entities unless paused
+		if (!paused)
+		{
+			entityManager.updateEntities();
 		}
 	}
 
 	@Override
 	public synchronized void cleanup()
 	{
-		// TODO Auto-generated method stub
+		EntityManager.reset();
 	}
 
 	@Override
 	protected synchronized void renderState()
 	{
-		int[] layersToClear = {1,2,5};
+		int[] layersToClear = {1,2,3,5};
+		// Clear specified layers
 		Gfx.clearLayers(layersToClear);
-		// Test with being able to render a layer once without clearing it
+		// Render the background, if not already rendered once
 		if (renderBG)
 		{
-			System.out.println("RenderingBG");
 			renderBG = false;
-			layers[0].setColor(Color.cyan);
+			layers[0].setColor(Color.black);
 			layers[0].fillRect(
 					0,
 					0,
@@ -69,28 +73,13 @@ public class PlayLevel extends GameState
 					Gfx.getFrameHeight()
 					);
 		}
-		layers[1].setColor(Color.blue);
-		layers[2].setColor(Color.yellow);
-		// Test of drawing to higher layer first
-		layers[2].drawRect(
-				Gfx.getFrameWidth()/4+5,
-				Gfx.getFrameHeight()/4+5,
-				Gfx.getFrameWidth()/2-10,
-				Gfx.getFrameHeight()/2-10
-				);
-		layers[1].fillRect(
-				Gfx.getFrameWidth()/4,
-				Gfx.getFrameHeight()/4,
-				Gfx.getFrameWidth()/2,
-				Gfx.getFrameHeight()/2
-				);
+		// Render the entities
+		entityManager.renderAll(layers[3]);
 		// Draw pause related stuff
 		if (paused)
 		{
 			layers[5].setColor(pauseBGColor);
 			layers[5].fillRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
 		}
-		// Render the test entity (does not draw to the layer)
-		testPlayer.render.render();
 	}
 }
