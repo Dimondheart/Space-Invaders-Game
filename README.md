@@ -1,10 +1,22 @@
 # Space Invaders Game #
-A Space Invaders clone.
+
+A Space Invaders remake.
+
+![spaceinvaders-sample1](https://cloud.githubusercontent.com/assets/7505459/9828865/c5dc0dfc-58b9-11e5-82b0-779a75306d2e.png)
 
 ## Features ##
 
 ### Current Features ###
-- Only really the framework :}
+- Framework
+- Partial game states (main menu, level, quit)
+- Partial entities (Barriers, Player)
+- Barriers
+- Player ship
+- Movement
+- Player control
+- Basic weapon & bullets
+- Health
+- And a few more things...
 
 ### Planned Features ###
 - All normal space invaders features
