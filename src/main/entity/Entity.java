@@ -13,7 +13,11 @@ public abstract class Entity
 	public Health health;
 	public Weapon weapon;
 	
+	/** The generic entity type of this entity instance. */
 	protected EntityType type;
+	
+	/** If this entity needs to be destroyed. */
+	private boolean destroy = false;
 	
 	/** Generic entity types. */
 	public enum EntityType
@@ -33,7 +37,8 @@ public abstract class Entity
 		}
 	}
 	
-	/** Render this entity. 
+	/** Render this entity. The entity self-positions itself on the provided
+	 * surface.
 	 * @param g2 the surface to draw on.
 	 */
 	protected abstract void renderEntity(Graphics2D g2);
@@ -45,8 +50,23 @@ public abstract class Entity
 		return type;
 	}
 	
+	/** Renders this entity to the specified graphics context.
+	 * @param g2 the graphics context/surface
+	 */
 	public void render(Graphics2D g2)
 	{
 		renderEntity(g2);
+	}
+	
+	/** Marks this entity to be destroyed. */
+	public void markForDestruction()
+	{
+		destroy = true;
+	}
+	
+	/** Check if this entity should be destroyed. */
+	public boolean destroy()
+	{
+		return destroy;
 	}
 }

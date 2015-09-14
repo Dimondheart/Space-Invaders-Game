@@ -58,10 +58,9 @@ public class PlayLevel extends GameState
 	@Override
 	protected synchronized void renderState()
 	{
-		int[] layersToClear = {1,2,3,5};
 		// Clear specified layers
-		Gfx.clearLayers(layersToClear);
-		// Render the background, if not already rendered once
+		Gfx.clearLayersInRange(1, 6);
+		// Render the primary background, if not already rendered once
 		if (renderBG)
 		{
 			renderBG = false;
@@ -74,7 +73,7 @@ public class PlayLevel extends GameState
 					);
 		}
 		// Render the entities
-		entityManager.renderAll(layers[3]);
+		entityManager.renderAll();
 		// Draw pause related stuff
 		if (paused)
 		{

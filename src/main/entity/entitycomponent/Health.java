@@ -12,13 +12,11 @@ public class Health
 	
 	public Health()
 	{
-		this.maxHP = 0;
+		this.maxHP = 1;
 		hp = this.maxHP;
 	}
 	
-	/** Constructor, takes an int for the initial hitpoints.
-	 * Specify a max hp less than 0 for an indestructable entity.
-	 */
+	/** Constructor, takes an int for the initial hitpoints. */
 	public Health(int maxHP)
 	{
 		this.maxHP = maxHP;
@@ -34,7 +32,7 @@ public class Health
 	/** Checks if this entity is dead/taken its max hits. */
 	public boolean isDestroyed()
 	{
-		return (hp == 0);
+		return (hp <= 0);
 	}
 	
 	/** Damages the entities hitpoints. */

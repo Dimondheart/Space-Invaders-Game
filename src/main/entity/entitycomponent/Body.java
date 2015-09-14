@@ -27,16 +27,6 @@ public class Body
 	/** Sets if the entity should be stopped by map edges. Default is true. */
 	private boolean stopAtEdge = true;
 	
-	/** Basic constructor. */
-	public Body()
-	{
-		radius = 20;
-		vector = new int[2];
-		vector[0] = 0;
-		vector[1] = 0;
-		setPos(200, getRadius() + 4);
-	}
-	
 	/** Constructor, takes an argument for the collision area radius. */
 	public Body(int newRadius)
 	{
@@ -44,6 +34,15 @@ public class Body
 		vector = new int[2];
 		setVector(0, 0);
 		setPos(200, getRadius() + 4);
+	}
+	
+	/** Constructor, takes arguments for radius and initial position. */
+	public Body(int newRadius, int newX, int newY)
+	{
+		radius = newRadius;
+		vector = new int[2];
+		setVector(0, 0);
+		setPos(newX, newY);
 	}
 	
 	/** Checks if this body has passed an edge of the map/grid. */
@@ -82,6 +81,8 @@ public class Body
 	/** Set the position of this body.
 	 * Using <tt>move()</tt> along with adjusting the vector should be used
 	 * for normal movement.
+	 * Note that the y axis is flipped relative to the drawing surfaces,
+	 * so (0,0) is in the lower left corner of this grid.
 	 * @param newX the new x coordinate
 	 * @param newY the new y coordinate
 	 */
@@ -100,6 +101,8 @@ public class Body
 	}
 	
 	/** Sets the y coordinate of this body.
+	 * Note that the y axis is flipped relative to the drawing surfaces,
+	 * so (0,0) is in the lower left corner of this grid.
 	 * @param newY the new y coordinate
 	 */
 	public synchronized void setY(int newY)

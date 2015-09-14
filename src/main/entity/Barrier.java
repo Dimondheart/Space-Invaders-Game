@@ -13,10 +13,10 @@ public class Barrier extends Entity
 {
 	/* TODO: Make sure these look like asteroids/space junk! */
 	
-	/** Basic constructor. */
-	public Barrier()
+	/** Constructor, takes an x and y for the initial position. */
+	public Barrier(int newX, int newY)
 	{
-		body = new Body(4);
+		body = new Body(4, newX, newY);
 		health = new Health(1);
 	}
 

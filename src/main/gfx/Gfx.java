@@ -155,4 +155,14 @@ public class Gfx implements Runnable
 	{
 		layerContainer.clearLayers(layers);
 	}
+	
+	/** Clears all layers starting with <tt>start</tt> layer and stopping with
+	 * <tt>stop</tt> layer.
+	 * @param start the first layer to clear
+	 * @param stop the last layer to clear
+	 */
+	public static synchronized void clearLayersInRange(int start, int stop)
+	{
+		layerContainer.clearLayersInRange(start, stop);
+	}
 }

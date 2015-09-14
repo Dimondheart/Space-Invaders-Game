@@ -6,9 +6,11 @@ import main.entity.EntityManager;
 
 public class Weapon
 {
+	/* TODO: Implement weapons being able to store multiple charges. */
 	/** Minimum amount of time between shots, in milliseconds. */
 	private static final long FIRE_INTERVAL = 500;
 	
+	/* TODO: Fix bug where pausing allows weapons to reload 'instantly.' */
 	/** The time the previous shot was fired. */
 	private long lastFireTime;
 	

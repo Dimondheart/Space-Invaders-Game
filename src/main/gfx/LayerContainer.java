@@ -74,6 +74,19 @@ public class LayerContainer extends JLayeredPane
 		}
 	}
 	
+	/** Clears all layers starting with <tt>start</tt> layer and stopping with
+	 * <tt>stop</tt> layer.
+	 * @param start the first layer to clear
+	 * @param stop the last layer to clear
+	 */
+	public synchronized void clearLayersInRange(int start, int stop)
+	{
+		for (int i = start; i <= stop; ++i)
+		{
+			clearLayer(i);
+		}
+	}
+	
 	protected synchronized void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
