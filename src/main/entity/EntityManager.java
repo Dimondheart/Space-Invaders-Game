@@ -3,6 +3,7 @@ package main.entity;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
+import main.entity.Entity.EntityType;
 import main.gfx.Gfx;
 
 /** Manages instances of entities and interacting with them. */
@@ -26,9 +27,12 @@ public class EntityManager
 		// Create test barriers
 		for (int x = 200-8*3; x < 200+8*3; x += 8)
 		{
-			entities.addFirst(new Barrier(x, 200));
+			entities.add(new Barrier(x, 200));
 		}
-//		entities.add(new Barrier(200, 200));
+		// Test Entity
+		entities.add(new BasicEnemyShip(175, 400-20-4));
+		entities.add(new BasicEnemyShip(200, 400-20-4));
+		entities.add(new BasicEnemyShip(225, 400-20-4));
 	}
 	
 	/** Updates all entities; performs AI, etc. */
@@ -73,16 +77,26 @@ public class EntityManager
 		for (int i = 0; i < entities.size(); ++i)
 		{
 			Entity entity = entities.get(i);
-			if (entity == null)
-			{
-				continue;
-			}
 			if (entity.destroy())
 			{
 				entities.remove(i);
 				continue;
 			}
 			entity.update();
+		}
+		// TODO: Make this generic for all enemy types
+		// Update enemies if one hit the wall
+		if (BasicEnemyShip.hitWall())
+		{
+			for (Entity entity : entities)
+			{
+				if (entity.getType() != EntityType.ENEMY)
+				{
+					continue;
+				}
+				((BasicEnemyShip) entity).moveDown();
+			}
+			BasicEnemyShip.resetHitWall();
 		}
 	}
 	

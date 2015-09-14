@@ -2,20 +2,18 @@
 
 A Space Invaders remake.
 
-![spaceinvaders-sample1](https://cloud.githubusercontent.com/assets/7505459/9828865/c5dc0dfc-58b9-11e5-82b0-779a75306d2e.png)
+![spaceinvaders-sample2](https://cloud.githubusercontent.com/assets/7505459/9864497/f63bf4f0-5b0f-11e5-9f0e-ca354c610dec.png)
 
 ## Features ##
 
 ### Current Features ###
-- Framework
 - Partial game states (main menu, level, quit)
-- Partial entities (Barriers, Player)
-- Barriers
-- Player ship
+- Partial entities (barriers, player, enemies)
 - Movement
 - Player control
 - Basic weapon & bullets
 - Health
+- Damage & destruction
 - And a few more things...
 
 ### Planned Features ###

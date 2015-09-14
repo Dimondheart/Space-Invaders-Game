@@ -78,6 +78,18 @@ public class Body
 		return radius;
 	}
 	
+	/** Gets the x component of the vector. */
+	public int getVectorX()
+	{
+		return vector[0];
+	}
+	
+	/** Gets the y component of the vector. */
+	public int getVectorY()
+	{
+		return vector[1];
+	}
+	
 	/** Set the position of this body.
 	 * Using <tt>move()</tt> along with adjusting the vector should be used
 	 * for normal movement.
@@ -116,14 +128,14 @@ public class Body
 	 */
 	public synchronized void setVector(int x, int y)
 	{
-		setXVector(x);
-		setYVector(y);
+		setVectorX(x);
+		setVectorY(y);
 	}
 	
 	/** Sets only the x component of the movement vector.
 	 * @param x the new x component
 	 */
-	public synchronized void setXVector(int x)
+	public synchronized void setVectorX(int x)
 	{
 		vector[0] = x;
 	}
@@ -131,7 +143,7 @@ public class Body
 	/** Sets only the y component of the movement vector.
 	 * @param y the new y component
 	 */
-	public synchronized void setYVector(int y)
+	public synchronized void setVectorY(int y)
 	{
 		vector[1] = y;
 	}
