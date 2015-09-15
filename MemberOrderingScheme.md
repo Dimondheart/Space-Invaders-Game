@@ -24,14 +24,14 @@ This file explains this repositories standard for sorting the members of objects
 
 ## Constructors ##
 
-### No-Argument Constructor ###
+### No-Argument Constructor (If Used) ###
 
 ### All Others Sorted by Number of Arguments. ###
 
 
 ## Methods ##
 
-### If using a thread, run() goes first ###
+### If using a thread, start() then @Override run() go here ###
 
 ### Abstracts ###
 

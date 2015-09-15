@@ -14,6 +14,7 @@ A Space Invaders remake.
 - Basic weapon & bullets
 - Health
 - Damage & destruction
+- Partial framework for a sound system
 - And a few more things...
 
 ### Planned Features ###

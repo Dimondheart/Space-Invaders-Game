@@ -9,6 +9,7 @@ import main.ThreadClock;
 
 /** Class that handles or delegates all events or actions directly on or by
  * the primary display frame/window.
+ * <br>Is threaded.
  */
 public class Gfx implements Runnable
 {
@@ -37,6 +38,7 @@ public class Gfx implements Runnable
 	 */
 	public Gfx()
 	{
+		System.out.println("Setting Up Graphics System...");
 		renderAreaWidth = 400;
 		renderAreaHeight = 400;
 		Dimension dim = new Dimension(renderAreaWidth, renderAreaHeight);
@@ -55,6 +57,7 @@ public class Gfx implements Runnable
 	/** Starts this thread after any final initialization operations. */
 	public void start()
 	{
+		System.out.println("Starting Graphics System...");
 		// Finalize the window
 		mainFrame.pack();
 		mainFrame.setVisible(true);

@@ -27,7 +27,10 @@ public class EntityManager
 		// Create test barriers
 		for (int x = 200-8*3; x < 200+8*3; x += 8)
 		{
-			entities.add(new Barrier(x, 200));
+			entities.add(new Barrier(x, 100));
+			entities.add(new Barrier(x, 92));
+			entities.add(new Barrier(x, 84));
+			entities.add(new Barrier(x, 76));
 		}
 		// Test Entity
 		entities.add(new BasicEnemyShip(175, 400-20-4));

@@ -12,6 +12,7 @@ import main.gfx.Gfx;
 public class Barrier extends Entity
 {
 	/* TODO: Make sure these look like asteroids/space junk! */
+	Color brown = new Color(165,42,42);
 	
 	/** Constructor, takes an x and y for the initial position. */
 	public Barrier(int newX, int newY)
@@ -30,7 +31,7 @@ public class Barrier extends Entity
 		// Change x and y to the upper left corner
 		x = x - body.getRadius();
 		y = y - body.getRadius();
-		g2.setColor(Color.gray);
+		g2.setColor(brown);
 		// Draw a placeholder graphic
 		g2.fillOval(x, y, body.getRadius()*2, body.getRadius()*2);
 	}
