@@ -3,6 +3,9 @@ package main.entity;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
+import main.entity.Entity.EntityType;
+import main.gfx.Gfx;
+
 /** Manages instances of entities and interacting with them. */
 public class EntityManager
 {
@@ -10,32 +13,34 @@ public class EntityManager
 	public static final int PLAYER_ID = 0;
 	/** Maximum number of bullets that can be created. */
 	private static final int MAX_BULLETS = 200;
-	private Entity[] entities;
+	/** List of bullet entities. */
 	private static LinkedList<Bullet> bullets;
+	/** List of simple entities, which can all be handled the same way. */
+	private LinkedList<Entity> entities;
 	
 	public EntityManager()
 	{
-		entities = new Entity[40];
+		entities = new LinkedList<Entity>();
 		bullets = new LinkedList<Bullet>();
 		// Create the player
-		entities[PLAYER_ID] = new PlayerShip();
-		// Create test barrier
-		entities[1] = new Barrier();
-		entities[1].body.setPos(200, 200);
+		entities.add(new PlayerShip());
+		// Create test barriers
+		for (int x = 200-8*3; x < 200+8*3; x += 8)
+		{
+			entities.add(new Barrier(x, 100));
+			entities.add(new Barrier(x, 92));
+			entities.add(new Barrier(x, 84));
+			entities.add(new Barrier(x, 76));
+		}
+		// Test Entity
+		entities.add(new BasicEnemyShip(175, 400-20-4));
+		entities.add(new BasicEnemyShip(200, 400-20-4));
+		entities.add(new BasicEnemyShip(225, 400-20-4));
 	}
 	
 	/** Updates all entities; performs AI, etc. */
 	public synchronized void updateEntities()
 	{
-		// Update entities
-		for (Entity entity : entities)
-		{
-			if (entity == null)
-			{
-				continue;
-			}
-			entity.update();
-		}
 		// Update bullets
 		for (int i = 0; i < bullets.size(); ++i)
 		{
@@ -45,10 +50,6 @@ public class EntityManager
 			// Check if any bullets hit one of their enemies
 			for (Entity entity : entities)
 			{
-				if (entity == null)
-				{
-					continue;
-				}
 				// If touching the entity
 				if (bullet.body.isTouching(entity.body))
 				{
@@ -56,6 +57,11 @@ public class EntityManager
 					if (bullet.getWhoFired() != entity.getType())
 					{
 						entity.health.hit();
+						// Destroy the enemy if it is out of hp
+						if (entity.health.isDestroyed())
+						{
+							entity.markForDestruction();
+						}
 						// Destroy the bullet
 						bullet.markForDestruction();
 						System.out.println(
@@ -64,31 +70,51 @@ public class EntityManager
 					}
 				}
 			}
-			// TODO: Implement destruction functionality for all entities
 			// Destroy a "dead" bullet
 			if (bullet.destroy())
 			{
 				bullets.remove(i);
 			}
 		}
+		// Update standard entities
+		for (int i = 0; i < entities.size(); ++i)
+		{
+			Entity entity = entities.get(i);
+			if (entity.destroy())
+			{
+				entities.remove(i);
+				continue;
+			}
+			entity.update();
+		}
+		// TODO: Make this generic for all enemy types
+		// Update enemies if one hit the wall
+		if (BasicEnemyShip.hitWall())
+		{
+			for (Entity entity : entities)
+			{
+				if (entity.getType() != EntityType.ENEMY)
+				{
+					continue;
+				}
+				((BasicEnemyShip) entity).moveDown();
+			}
+			BasicEnemyShip.resetHitWall();
+		}
 	}
 	
 	/** Render all entities. */
-	public synchronized void renderAll(Graphics2D g2)
+	public synchronized void renderAll()
 	{
-		// Render invaders
+		// Render bullets
+		for (Bullet bullet : bullets)
+		{
+			bullet.render(Gfx.getLayerSurface(2));
+		}
+		// Render other entities
 		for (Entity entity : entities)
 		{
-			if (entity == null)
-			{
-				continue;
-			}
-			entity.render(g2);
-		}
-		// Render bullets
-		for (int i = 0; i < bullets.size(); ++i)
-		{
-			bullets.get(i).render(g2);
+			entity.render(Gfx.getLayerSurface(3));
 		}
 	}
 	

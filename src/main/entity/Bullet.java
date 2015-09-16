@@ -11,8 +11,8 @@ public class Bullet extends Entity
 {
 	/** The type of entity that fired this bullet instance. */
 	private EntityType firedBy;
-	/** If this bullet needs to be destroyed. */
-	private boolean destroy = false;
+//	/** If this bullet needs to be destroyed. */
+//	private boolean destroy = false;
 	
 	/** Basic constructor, specify the type of entity that fired it. */
 	public Bullet(EntityType firedBy)
@@ -56,15 +56,15 @@ public class Bullet extends Entity
 		return firedBy;
 	}
 	
-	/** Marks this entity to be destroyed. */
-	public void markForDestruction()
-	{
-		destroy = true;
-	}
-	
-	/** Check if this entity should be destroyed. */
-	public boolean destroy()
-	{
-		return destroy;
-	}
+//	/** Marks this entity to be destroyed. */
+//	public void markForDestruction()
+//	{
+//		destroy = true;
+//	}
+//	
+//	/** Check if this entity should be destroyed. */
+//	public boolean destroy()
+//	{
+//		return destroy;
+//	}
 }

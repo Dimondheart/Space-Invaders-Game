@@ -3,7 +3,9 @@ package main;
 import main.gamestate.*;
 
 /** Represents a game session, handling initialization and general game events
- * or actions
+ * or actions.
+ * <br>Is threaded, but uses the Main thread instead of creating its own
+ * thread.
  */
 public class Game
 {
@@ -12,15 +14,19 @@ public class Game
 	/** Current state of the game. */
 	private static GameState gameState;
 	/** The primary graphics handling object. */
-	main.gfx.Gfx graphics;
+	private main.gfx.Gfx graphics;
+	/** The sound handling system. */
+	private main.SoundSystem soundSys;
 	
 	/** Default constructor, creates instances of important objects. */
 	public Game()
 	{
 		// Create the thread clock w/ default priority
 		clock = new ThreadClock();
-		// Create the main window/frame
+		// Setup the graphics system
 		graphics = new main.gfx.Gfx();
+		// Setup the sound system
+		soundSys = new main.SoundSystem();
 		// Select a game state to start with
 		createNewGameState(GameState.GameStates.MAIN_MENU);
 	}
@@ -30,6 +36,7 @@ public class Game
 	{
 		// Start all other threaded systems/objects
 		graphics.start();
+		soundSys.start();
 		run();
 	}
 	
