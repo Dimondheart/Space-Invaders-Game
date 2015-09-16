@@ -105,8 +105,8 @@ public class PlayLevel extends GameState
 					b = 150;
 				}
 				layers[1].setColor(new Color(r,g,b,a));
-				int x = rng.nextInt(396);
-				int y = rng.nextInt(396);
+				int x = rng.nextInt(Gfx.getFrameWidth()-4);
+				int y = rng.nextInt(Gfx.getFrameHeight()-4);
 				int radius = rng.nextInt(4);
 				if (radius == 0)
 				{

@@ -17,7 +17,7 @@ public class Bullet extends Entity
 	/** Basic constructor, specify the type of entity that fired it. */
 	public Bullet(EntityType firedBy)
 	{
-		body = new Body(4);
+		body = new Body(3);
 		body.setStopAtEdge(false);
 		this.firedBy = firedBy;
 	}

@@ -2,6 +2,7 @@ package main.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Random;
 
 import main.entity.entitycomponent.*;
 import main.gfx.Gfx;
@@ -9,8 +10,12 @@ import main.gfx.Gfx;
 /** The simplest enemy space ship. */
 public class BasicEnemyShip extends Entity
 {
+	/** Change to fire, out of 1000. */
+	private static final int FIRE_CHANCE = 5;
 	/** Used to indicate when an enemy has hit a wall. */
 	private static boolean hitWall = false;
+	/** Random number generator used to make random decisions. */
+	private Random rng;
 	
 	/** Basic constructor. */
 	public BasicEnemyShip(int newX, int newY)
@@ -21,6 +26,8 @@ public class BasicEnemyShip extends Entity
 		body.setStopAtEdge(false);
 		health = new Health(1);
 		weapon = new Weapon();
+		// Random number generator
+		rng = new Random();
 	}
 
 	@Override
@@ -41,7 +48,12 @@ public class BasicEnemyShip extends Entity
 	@Override
 	public void update()
 	{
-		weapon.fire(body, type);
+		int rand = rng.nextInt(1001);
+		System.out.println(rand);
+		if (FIRE_CHANCE >= rand)
+		{
+			weapon.fire(body, type);
+		}
 		body.move();
 		if (body.getX() <= 0 || body.getX() >= 400)
 		{

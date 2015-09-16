@@ -32,10 +32,15 @@ public class EntityManager
 			entities.add(new Barrier(x, 84));
 			entities.add(new Barrier(x, 76));
 		}
-		// Test Entity
+		// Test Entities
+		entities.add(new BasicEnemyShip(150, 400-20-4));
 		entities.add(new BasicEnemyShip(175, 400-20-4));
 		entities.add(new BasicEnemyShip(200, 400-20-4));
 		entities.add(new BasicEnemyShip(225, 400-20-4));
+		entities.add(new BasicEnemyShip(250, 400-20-4));
+		entities.add(new BasicEnemyShip(175, 400-40-4));
+		entities.add(new BasicEnemyShip(200, 400-40-4));
+		entities.add(new BasicEnemyShip(225, 400-40-4));
 	}
 	
 	/** Updates all entities; performs AI, etc. */
