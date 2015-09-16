@@ -2,7 +2,7 @@
 
 A Space Invaders remake.
 
-![spaceinvaders-sample2](https://cloud.githubusercontent.com/assets/7505459/9864497/f63bf4f0-5b0f-11e5-9f0e-ca354c610dec.png)
+![spaceinvaders-sample3](https://cloud.githubusercontent.com/assets/7505459/9895060/b5544dc0-5bf0-11e5-9932-52ddbf0f45f0.png)
 
 ## Features ##
 
@@ -12,8 +12,8 @@ A Space Invaders remake.
 - Movement
 - Player control
 - Basic weapon & bullets
-- Health
-- Damage & destruction
+- Health, damage & destruction
+- Basic graphics (including a nifty random star background generator!)
 - Partial framework for a sound system
 - And a few more things...
 
