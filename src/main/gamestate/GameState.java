@@ -19,8 +19,6 @@ public abstract class GameState
 	 * (0 = lowest layer).
 	 */
 	protected Graphics2D[] layers = new Graphics2D[main.gfx.Gfx.NUM_LAYERS];
-	/** The manager of all user inputs. */
-	protected InputManager inputs;
 	
 	/** The different types of states the game can be in. */
 	public enum GameStates
@@ -28,12 +26,6 @@ public abstract class GameState
 		MAIN_MENU,
 		PLAY_LEVEL,
 		QUIT
-	}
-	
-	public GameState()
-	{
-		// Create input manager
-		inputs = new InputManager();
 	}
 	
 	/** State-specific processing operations. */

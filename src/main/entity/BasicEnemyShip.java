@@ -49,7 +49,6 @@ public class BasicEnemyShip extends Entity
 	public void update()
 	{
 		int rand = rng.nextInt(1001);
-		System.out.println(rand);
 		if (FIRE_CHANCE >= rand)
 		{
 			weapon.fire(body, type);

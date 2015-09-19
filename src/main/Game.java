@@ -71,9 +71,9 @@ public class Game
 	{
 		switch (stateName)
 		{
-		// When a level has been loaded 
+		// The classic space invaders mode
 		case PLAY_LEVEL:
-			gameState = new PlayLevel();
+			gameState = new ClassicMode();
 			break;
 		
 		// Quit is a game state that indicates program should be terminated
