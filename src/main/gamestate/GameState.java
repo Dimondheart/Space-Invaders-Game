@@ -11,12 +11,14 @@ import main.inputdevice.InputManager;
 public abstract class GameState
 {
 	private static boolean quitIndicated = false;
+	private static boolean suspendIndicated = false;
 	/** Indicates when to transition out of the current state. */
 	public boolean stateChange = false;
 	/** Specifies the type of the game state to transition to next. */
 	public GameStates newState = GameStates.MAIN_MENU;
 	/** List of the drawing surfaces for each layer, in order
 	 * (0 = lowest layer).
+	 * <br> TODO: Make a separate list for background, main, and GUI layers.
 	 */
 	protected Graphics2D[] layers = new Graphics2D[main.gfx.Gfx.NUM_LAYERS];
 	
@@ -63,6 +65,38 @@ public abstract class GameState
 		return newState;
 	}
 	
+	/** Indicates that the game state should be transitioned to
+	 * a quit state.  Does not take effect until the start of the
+	 * next call to <tt>cycle()</tt>.
+	 */
+	public static synchronized void indicateQuit()
+	{
+		quitIndicated = true;
+	}
+	
+	/** Indicate that the current game state should be paused because of
+	 * certain events, like minimizing the game window.
+	 */
+	public static synchronized void indicateSuspend()
+	{
+		suspendIndicated = true;
+	}
+	
+	/** Resets the variable indicating that a state should suspend. */
+	private static synchronized void resetSuspend()
+	{
+		suspendIndicated = false;
+	}
+	
+	/** Does any changes when the state should suspend in response to events,
+	 * like minimizing the window. Subclasses should override this if they
+	 * want to respond to these events; by default it does nothing.
+	 */
+	protected void suspend()
+	{
+		// Do nothing by default
+	}
+	
 	/** One processing cycle of actions for a game state. */
 	public void cycle()
 	{
@@ -71,6 +105,11 @@ public abstract class GameState
 		{
 			changeState(GameStates.QUIT);
 			return;
+		}
+		if (suspendIndicated)
+		{
+			suspend();
+			resetSuspend();
 		}
 		// Update input devices
 		InputManager.updateAllInputs();
@@ -94,7 +133,7 @@ public abstract class GameState
 	public void render()
 	{
 		// Don't bother rendering if quit is indicated or moving into quit
-		if (quitIndicated || (stateChange && newState == GameStates.QUIT))
+		if (quitIndicated || (isChangeStateIndicated() && newState == GameStates.QUIT))
 		{
 			return;
 		}
@@ -115,14 +154,5 @@ public abstract class GameState
 	{
 		this.newState = newState;
 		stateChange = true;
-	}
-	
-	/** Indicates that the game state should be transitioned to
-	 * a quit state.  Does not take effect until the start of the
-	 * next call to <tt>cycle()</tt>.
-	 */
-	public static synchronized void indicateQuit()
-	{
-		quitIndicated = true;
 	}
 }

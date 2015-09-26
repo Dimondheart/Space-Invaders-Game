@@ -4,9 +4,9 @@ By Bryan Bettis
 This file explains this repositories standard for sorting the members of objects in java class files.
 
 #### General rules: ####
-- Public comes before protected comes before private
 - (Static final) then (static) then (final) then everything else
-- At the finest level of sorting, members are sorted loosely based on how commonly used they are or with the newest members last, and sometimes the order they are normally used in (e.g. setup() then cleanup()) or importance.
+- Public comes before protected comes before private (after sorting by the above rule)
+- At the finest level of sorting (after sorted by public/protected/private), members are sorted loosely based on how commonly used they are or with the newest members last, and sometimes the order they are normally used in (e.g. setup() then cleanup()) or importance.
 
 
 ## Class Variables ##

@@ -79,6 +79,7 @@ public class ClassicMode extends GameState
 	@Override
 	protected synchronized void renderState()
 	{
+		// TODO: Fix issue w/ having to resize once before entities  will draw
 		// Clear specified layers
 		Gfx.clearLayersInRange(2, 6);
 		// Render the background, if not already rendered once
@@ -90,6 +91,12 @@ public class ClassicMode extends GameState
 		}
 		// Render the level stuff
 		level.render();
+	}
+	
+	@Override
+	protected synchronized void suspend()
+	{
+		level.pause();
 	}
 	
 	/** Draw the background graphics. */

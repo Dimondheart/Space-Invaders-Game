@@ -1,5 +1,6 @@
 package main.gfx;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.swing.*;
@@ -18,16 +19,18 @@ public class Gfx implements Runnable
 	 */
 	/** The name of the primary game frame. */
 	public static final String MAIN_FRAME_NAME = "Space Invaders";
+	/** Default window dimensions. */
+	public static final int DEFAULT_WINDOW_DIM = main.gamestate.level.Level.getLevelHeight();
 	/** Number of layers in the primary window. */
 	public static final int NUM_LAYERS = 7;
 	/** The frame of the primary/most important window. */
 	private static JFrame mainFrame;
 	/** Contains all layers used to render graphics. */
 	private static LayerContainer layerContainer;
-	/** Width of the render area all components should use. */
-	private static int renderAreaWidth;
-	/** Height of the render area all components should use. */
-	private static int renderAreaHeight;
+//	/** Width of the render area all components should use. */
+//	private static int renderAreaWidth;
+//	/** Height of the render area all components should use. */
+//	private static int renderAreaHeight;
 	/** The thread for updating graphics. */
 	private Thread gfxThread;
 	/** The clock cycle handler. */
@@ -39,12 +42,12 @@ public class Gfx implements Runnable
 	public Gfx()
 	{
 		System.out.println("Setting Up Graphics System...");
-		renderAreaWidth = 400;
-		renderAreaHeight = 400;
-		Dimension dim = new Dimension(renderAreaWidth, renderAreaHeight);
+		// Default window size
+		Dimension dim = new Dimension(DEFAULT_WINDOW_DIM, DEFAULT_WINDOW_DIM);
 		// Create the frame & layered pane
 		mainFrame = new JFrame(MAIN_FRAME_NAME);
 		// Create the container of layers
+		// TODO: Account for window boarder insets
 		layerContainer = new LayerContainer();
 		layerContainer.setPreferredSize(dim);
 		mainFrame.add(layerContainer);
@@ -80,7 +83,15 @@ public class Gfx implements Runnable
 	 */
 	public static int getFrameWidth()
 	{
-		return renderAreaWidth;
+		// If the window is not completely setup yet, return the default size
+		if (mainFrame.getWidth() <= 0)
+		{
+			return DEFAULT_WINDOW_DIM;
+		}
+		else
+		{
+			return mainFrame.getWidth();
+		}
 	}
 	
 	/** Returns the height of the render area.
@@ -88,7 +99,15 @@ public class Gfx implements Runnable
 	 */
 	public static int getFrameHeight()
 	{
-		return renderAreaHeight;
+		// If the window is not completely setup yet, return the default size
+		if (mainFrame.getHeight() <= 0)
+		{
+			return DEFAULT_WINDOW_DIM;
+		}
+		else
+		{
+			return mainFrame.getHeight();
+		}
 	}
 	
 	/** Gets the primary JFrame for the game.
@@ -120,6 +139,18 @@ public class Gfx implements Runnable
 	public static Graphics2D getLayerSurface(int layer)
 	{
 		return layerContainer.getDrawingSurface(layer);
+	}
+	
+	/** Get the width of a layer. */
+	public static int getLayerWidth(int layer)
+	{
+		return layerContainer.getLayerWidth(layer);
+	}
+	
+	/** Get the height of a layer. */
+	public static int getLayerHeight(int layer)
+	{
+		return layerContainer.getLayerHeight(layer);
 	}
 	
 	/** Updates the local reference to the game state.  Used to call game state
@@ -167,5 +198,24 @@ public class Gfx implements Runnable
 	public static synchronized void clearLayersInRange(int start, int stop)
 	{
 		layerContainer.clearLayersInRange(start, stop);
+	}
+	
+	public static synchronized void frameResized(JFrame frame)
+	{
+		// Check which frame has been resized
+		if (frame == mainFrame)
+		{
+			layerContainer.adjustSize(frame.getSize());
+		}
+		else
+		{
+			System.out.println("Unknown frame resized: " + frame);
+		}
+		frame.validate();
+	}
+	
+	public static synchronized double getLayerScaleFactor()
+	{
+		return layerContainer.getScaleFactor();
 	}
 }

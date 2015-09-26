@@ -15,25 +15,11 @@ public class PlayerShip extends Entity
 	/** Basic constructor. */
 	public PlayerShip()
 	{
+		renderColor = Color.blue;
 		type = EntityType.PLAYER;
 		body = new Body(20);
 		health = new Health(3);
 		weapon = new Weapon();
-	}
-
-	@Override
-	public void renderEntity(Graphics2D g2)
-	{
-		// Get the center x
-		int x = body.getX();
-		// Get the center y and adjust it to screen coordinates
-		int y = Gfx.getFrameHeight() - body.getY();
-		// Change x and y to the upper left corner
-		x = x - body.getRadius();
-		y = y - body.getRadius();
-		g2.setColor(Color.blue);
-		// Draw a placeholder graphic
-		g2.fillOval(x, y, body.getRadius()*2, body.getRadius()*2);
 	}
 
 	@Override

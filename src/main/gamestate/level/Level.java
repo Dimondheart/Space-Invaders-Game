@@ -14,6 +14,8 @@ import main.gfx.Gfx;
  */
 public class Level
 {
+	private static int width = 400;
+	private static int height = 400;
 	private boolean paused;
 	private Color pauseBGColor;
 	private Graphics2D[] guiLayers;
@@ -51,6 +53,16 @@ public class Level
 	public LevelState getLevelState()
 	{
 		return state;
+	}
+	
+	public static int getLevelWidth()
+	{
+		return width;
+	}
+	
+	public static int getLevelHeight()
+	{
+		return height;
 	}
 	
 	/** Set the state of the level to pause. */

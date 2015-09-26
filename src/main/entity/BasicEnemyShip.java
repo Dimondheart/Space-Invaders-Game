@@ -20,6 +20,7 @@ public class BasicEnemyShip extends Entity
 	/** Basic constructor. */
 	public BasicEnemyShip(int newX, int newY)
 	{
+		renderColor = Color.red;
 		type = EntityType.ENEMY;
 		body = new Body(10, newX, newY);
 		body.setVector(2, 0);
@@ -28,21 +29,6 @@ public class BasicEnemyShip extends Entity
 		weapon = new Weapon();
 		// Random number generator
 		rng = new Random();
-	}
-
-	@Override
-	public void renderEntity(Graphics2D g2)
-	{
-		// Get the center x
-		int x = body.getX();
-		// Get the center y and adjust it to screen coordinates
-		int y = Gfx.getFrameHeight() - body.getY();
-		// Change x and y to the upper left corner
-		x = x - body.getRadius();
-		y = y - body.getRadius();
-		g2.setColor(Color.red);
-		// Draw a placeholder graphic
-		g2.fillOval(x, y, body.getRadius()*2, body.getRadius()*2);
 	}
 
 	@Override

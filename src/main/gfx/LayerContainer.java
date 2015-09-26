@@ -16,6 +16,8 @@ public class LayerContainer extends JLayeredPane
 	private static main.gamestate.GameState gameState;
 	/** List of the components representing each layer. */
 	private Layer[] layers;
+	/** The ratio CurrentWidth/DefaultWidth for the width of this layer. */
+	private double scaleFactor;
 	
 	/** Basic constructor. */
 	public LayerContainer()
@@ -25,10 +27,7 @@ public class LayerContainer extends JLayeredPane
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
 			layers[i] = new Layer(Gfx.getFrameWidth(), Gfx.getFrameHeight());
-			layers[i].setPreferredSize(
-					new Dimension(Gfx.getFrameWidth(), Gfx.getFrameHeight())
-					);
-			add(layers[i], i);
+//			add(layers[i], i);
 		}
 	}
 	
@@ -38,6 +37,26 @@ public class LayerContainer extends JLayeredPane
 	public Graphics2D getDrawingSurface(int layer)
 	{
 		return layers[layer].getDrawingSurface();
+	}
+	
+	/** Return the width of a layer. */
+	public int getLayerWidth(int layer)
+	{
+		// TODO: Give each layer its own adjustable width
+		return this.getWidth();
+	}
+	
+	/** Return the height of a layer. */
+	public int getLayerHeight(int layer)
+	{
+		// TODO: Give each layer its own adjustable height
+		return this.getHeight();
+	}
+	
+	/** Return the scale factor for the size of the game area. */
+	public double getScaleFactor()
+	{
+		return scaleFactor;
 	}
 	
 	/** Updates the game state that render is called from.
@@ -87,6 +106,7 @@ public class LayerContainer extends JLayeredPane
 		}
 	}
 	
+	@Override
 	protected synchronized void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
@@ -95,10 +115,41 @@ public class LayerContainer extends JLayeredPane
 		// Clear the graphics context
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
-		/* Temporary dummy implementation of rendering layers. */
+		// Render the layers
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
 			layers[i].flip(g2);
 		}
+		g2.setColor(Color.blue);
+		g2.drawRect(0, 0, Gfx.DEFAULT_WINDOW_DIM, Gfx.DEFAULT_WINDOW_DIM);
+	}
+	
+	/** Changes the size of all the layers using newDims as the maximum
+	 * allowed dimensions.
+	 * @param newDims the maximum dimensions of the layers
+	 */
+	protected synchronized void adjustSize(Dimension newDims)
+	{
+		Dimension adjustedDims = new Dimension(0,0);
+		// Adjust the new dimensions to make the container have equal sides
+		if (newDims.getHeight() <= newDims.getWidth())
+		{
+			adjustedDims.setSize(newDims.getHeight(), newDims.getHeight());
+		}
+		else
+		{
+			adjustedDims.setSize(newDims.getWidth(), newDims.getWidth());
+		}
+		this.setSize(adjustedDims);
+		for (Layer layer : layers)
+		{
+			layer.adjustSize(adjustedDims);
+		}
+		updateScaleFactor();
+	}
+	
+	private void updateScaleFactor()
+	{
+		scaleFactor = (double)getLayerWidth(0)/(double)Gfx.DEFAULT_WINDOW_DIM;
 	}
 }
