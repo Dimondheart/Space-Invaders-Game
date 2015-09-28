@@ -33,6 +33,12 @@ public class InputManager
 		return mouse;
 	}
 	
+	/** Gets the primary window. */
+	public static WindowInput getPrimaryWindow()
+	{
+		return window;
+	}
+	
 	/** Clears the stored data of all input devices. */
 	public static void clearAllInputs()
 	{

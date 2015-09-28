@@ -22,6 +22,8 @@ public class Layer extends JPanel
 	private BufferedImage buffImg;
 	/** The buffered image's surface for this layer. */
 	private Graphics2D buffSurf;
+	/** The ratio CurrentWidth/DefaultWidth for the width of this layer. */
+	private double scaleFactor;
 	
 	/** The normal constructor for a Layer.
 	 * @param width of the layer
@@ -56,6 +58,12 @@ public class Layer extends JPanel
 	public int getLayerHeight()
 	{
 		return height;
+	}
+	
+	/** Gets the scale factor for this layer. */
+	public double getScaleFactor()
+	{
+		return scaleFactor;
 	}
 	
 	@Override
@@ -102,5 +110,11 @@ public class Layer extends JPanel
 		height = newDims.height;
 		this.setSize(newDims);
 		createNewBuffer();
+		updateScaleFactor();
+	}
+	
+	private void updateScaleFactor()
+	{
+		scaleFactor = (double)getWidth()/(double)Gfx.DEFAULT_WINDOW_DIM;
 	}
 }

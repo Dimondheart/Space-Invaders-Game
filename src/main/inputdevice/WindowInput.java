@@ -14,10 +14,13 @@ import main.gfx.Gfx;
 /** Event listener for window-related events. */
 public class WindowInput extends InputDevice implements WindowListener, ComponentListener
 {
+	/** The frame this window is listening to. */
 	private JFrame thisFrame;
+	/** If the window is currently visible. */
+	private boolean visible = true;
+	
 	/** Constructor which takes a reference to the frame it will
 	 * manage events for.
-	 * @param frame the JFrame this listener will listen to
 	 */
 	public WindowInput(JFrame frame)
 	{
@@ -38,12 +41,25 @@ public class WindowInput extends InputDevice implements WindowListener, Componen
 		// Not used
 	}
 	
+	/** Indicates when this window is not minimized, etc. */
+	public boolean isVisible()
+	{
+		return visible;
+	}
+	
+	/** Sets the variable that indicates if this window is visible. */
+	private void setVisible(boolean visibility)
+	{
+		visible = visibility;
+	}
+	
 	/* WindowListener Events */
 	@Override
 	public void windowClosing(WindowEvent e)
 	{
 		// Indicate to the current game state that it needs to quit
 		GameState.indicateQuit();
+		setVisible(false);
 	}
 
 	@Override
@@ -72,11 +88,13 @@ public class WindowInput extends InputDevice implements WindowListener, Componen
 	public void windowIconified(WindowEvent e)
 	{
 		focusLost();
+		setVisible(false);
 	}
 	
 	@Override
 	public void windowDeiconified(WindowEvent e)
 	{
+		setVisible(true);
 	}
 	
 	/* ComponentListener Events */

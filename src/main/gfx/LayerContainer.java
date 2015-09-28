@@ -6,9 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JLayeredPane;
 
-/** Handles the layers. Basically a thin layer over a JLayeredPane that
- * works with the rendering delegation used by this program.
- */
+/** Handles the different layers of the graphics for this application. */
 public class LayerContainer extends JLayeredPane
 {
 	private static final long serialVersionUID = 1L;
@@ -16,10 +14,9 @@ public class LayerContainer extends JLayeredPane
 	private static main.gamestate.GameState gameState;
 	/** List of the components representing each layer. */
 	private Layer[] layers;
-	/** The ratio CurrentWidth/DefaultWidth for the width of this layer. */
-	private double scaleFactor;
 	
-	/** Basic constructor. */
+	// TODO: Figure out how to copy javadoc descriptions
+	/** Handles the different layers of the graphics for this application. */
 	public LayerContainer()
 	{
 		// Setup the layers
@@ -33,30 +30,29 @@ public class LayerContainer extends JLayeredPane
 	
 	/** Gets the drawing surface for the specified layer.
 	 * @param layer the index of the layer
+	 * @return (Graphics2D) A reference to the drawing surface
 	 */
 	public Graphics2D getDrawingSurface(int layer)
 	{
 		return layers[layer].getDrawingSurface();
 	}
 	
-	/** Return the width of a layer. */
+	/** Return the width of the specified layer. */
 	public int getLayerWidth(int layer)
 	{
-		// TODO: Give each layer its own adjustable width
-		return this.getWidth();
+		return layers[layer].getWidth();
 	}
 	
-	/** Return the height of a layer. */
+	/** Return the height of the specified layer. */
 	public int getLayerHeight(int layer)
 	{
-		// TODO: Give each layer its own adjustable height
-		return this.getHeight();
+		return layers[layer].getHeight();
 	}
 	
-	/** Return the scale factor for the size of the game area. */
-	public double getScaleFactor()
+	/** Return the scale factor for the specified layer. */
+	public double getScaleFactor(int layer)
 	{
-		return scaleFactor;
+		return layers[layer].getScaleFactor();
 	}
 	
 	/** Updates the game state that render is called from.
@@ -131,7 +127,7 @@ public class LayerContainer extends JLayeredPane
 	protected synchronized void adjustSize(Dimension newDims)
 	{
 		Dimension adjustedDims = new Dimension(0,0);
-		// Adjust the new dimensions to make the container have equal sides
+		// Adjusted dimensions that cover the largest possible square on screen
 		if (newDims.getHeight() <= newDims.getWidth())
 		{
 			adjustedDims.setSize(newDims.getHeight(), newDims.getHeight());
@@ -140,16 +136,22 @@ public class LayerContainer extends JLayeredPane
 		{
 			adjustedDims.setSize(newDims.getWidth(), newDims.getWidth());
 		}
-		this.setSize(adjustedDims);
-		for (Layer layer : layers)
+		// Layer container covers whole window
+		this.setSize(newDims);
+		// Background layers cover whole window
+		for (int i = 0; i < 2; ++i)
 		{
-			layer.adjustSize(adjustedDims);
+			layers[i].adjustSize(newDims);
 		}
-		updateScaleFactor();
-	}
-	
-	private void updateScaleFactor()
-	{
-		scaleFactor = (double)getLayerWidth(0)/(double)Gfx.DEFAULT_WINDOW_DIM;
+		// Main layers cover the largest square area
+		for (int i = 2; i < 5; ++i)
+		{
+			layers[i].adjustSize(adjustedDims);
+		}
+		// GUI layers cover the entire screen
+		for (int i = 5; i < 7; ++i)
+		{
+			layers[i].adjustSize(newDims);
+		}
 	}
 }

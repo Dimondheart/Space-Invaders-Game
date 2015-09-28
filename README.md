@@ -2,7 +2,7 @@
 
 A Space Invaders remake.
 
-![spaceinvaders-sample3](https://cloud.githubusercontent.com/assets/7505459/9895060/b5544dc0-5bf0-11e5-9932-52ddbf0f45f0.png)
+![spaceinvaders-sample4](https://cloud.githubusercontent.com/assets/7505459/10128137/eb1b61b4-6573-11e5-8b7b-f821248aa966.png)
 
 ## Features ##
 

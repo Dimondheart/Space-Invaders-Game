@@ -1,6 +1,10 @@
 package main.gamestate;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import main.gfx.Gfx;
@@ -15,18 +19,19 @@ import static java.awt.event.MouseEvent.*;
 /** Game state when a level has been loaded and should be started. */
 public class ClassicMode extends GameState
 {
-	private boolean renderBG;
 	private int levelNum;
 	private Level level;
+	private BufferedImage bgImg;
 	
 	// TODO?: Create a constructor for specifying the starting level
 	
 	@Override
 	protected synchronized void initialize()
 	{
-		renderBG = true;
 		levelNum = 0;
 		level = new Level(levelNum);
+		// Draw the second layer of the background
+		drawBGSpecial();
 	}
 
 	@Override
@@ -81,14 +86,8 @@ public class ClassicMode extends GameState
 	{
 		// TODO: Fix issue w/ having to resize once before entities  will draw
 		// Clear specified layers
-		Gfx.clearLayersInRange(2, 6);
-		// Render the background, if not already rendered once
-		if (renderBG)
-		{
-			Gfx.clearLayersInRange(0, 1);
-			renderBG = false;
-			drawBG();
-		}
+		Gfx.clearAllLayers();
+		drawBG();
 		// Render the level stuff
 		level.render();
 	}
@@ -102,6 +101,7 @@ public class ClassicMode extends GameState
 	/** Draw the background graphics. */
 	private void drawBG()
 	{
+		// Draw main background (solid color)
 		layers[0].setColor(Color.black);
 		layers[0].fillRect(
 				0,
@@ -109,9 +109,39 @@ public class ClassicMode extends GameState
 				Gfx.getFrameWidth(),
 				Gfx.getFrameHeight()
 				);
-		// Generate a random starry background
+		// Draw the special "foreground-background"
+		layers[1].drawImage(bgImg, 0, 0, bgImg.getWidth(), bgImg.getHeight(), null);
+	}
+	
+	/** Renders the special front part of the background. */
+	private void drawBGSpecial()
+	{
+		Rectangle BGSize;
+		// Get the max possible screen dimensions
+		BGSize=GraphicsEnvironment
+				.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice()
+				.getDefaultConfiguration()
+				.getBounds();
+		// Create buffered image
+		bgImg = new BufferedImage(
+				BGSize.width,
+				BGSize.height,
+				BufferedImage.TYPE_INT_ARGB
+				);
+		Graphics2D surf = bgImg.createGraphics();
 		Random rng = new Random();
-		for (int n = 0; n < 250; ++n)
+		// Determine the number of stars, based on the area of the BG graphic
+		int numStars = (BGSize.width*BGSize.height) /
+				(Gfx.DEFAULT_WINDOW_DIM*Gfx.DEFAULT_WINDOW_DIM) *
+				250;
+		System.out.println(numStars);
+		// Draw a number of stars, based on the total area of the graphic
+		for (
+				int n = 0;
+				n < numStars;
+				++n
+				)
 		{
 			int r = 255;
 			int g = 255;
@@ -128,28 +158,28 @@ public class ClassicMode extends GameState
 			// Blue
 			else if (primaryColor == 1)
 			{
-				int rand = rng.nextInt(56);
+				int rand = rng.nextInt(46);
 				r = 190;
 				g = 190;
-				b = 200 + rand;
+				b = 210 + rand;
 			}
 			// Red/yellow
 			else if (primaryColor == 2)
 			{
-				int rand = rng.nextInt(56);
-				r = 200 + rand;
-				g = 200 + rand;
+				int rand = rng.nextInt(46);
+				r = 210 + rand;
+				g = 210 + rand;
 				b = 150;
 			}
-			layers[1].setColor(new Color(r,g,b,a));
-			int x = rng.nextInt(Gfx.getFrameWidth()-4);
-			int y = rng.nextInt(Gfx.getFrameHeight()-4);
+			surf.setColor(new Color(r,g,b,a));
+			int x = rng.nextInt(BGSize.width-4);
+			int y = rng.nextInt(BGSize.height-4);
 			int radius = rng.nextInt(4);
 			if (radius == 0)
 			{
 				radius = 1;
 			}
-			layers[1].fillOval(x, y, radius, radius);
+			surf.fillOval(x, y, radius, radius);
 		}
 	}
 }

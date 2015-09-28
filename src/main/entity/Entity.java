@@ -85,16 +85,16 @@ public abstract class Entity
 	protected void renderEntity(Graphics2D g2)
 	{
 		// Get the center x
-		int scrx = (int)((double)body.getX() * Gfx.getLayerScaleFactor());
+		int scrx = (int)((double)body.getX() * Gfx.getLayerScaleFactor(2));
 		// Get the center y and adjust it to screen coordinates
 		int scry = (int)(
 				(double)(
 						main.gamestate.level.Level.getLevelHeight()
 						- body.getY()
 						)
-				* Gfx.getLayerScaleFactor()
+				* Gfx.getLayerScaleFactor(2)
 				);
-		int scrRadius = (int)((double)body.getRadius() * Gfx.getLayerScaleFactor());
+		int scrRadius = (int)((double)body.getRadius() * Gfx.getLayerScaleFactor(2));
 		// Change x and y to the upper left corner
 		scrx = scrx - scrRadius;
 		scry = scry - scrRadius;
