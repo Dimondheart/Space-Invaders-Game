@@ -2,6 +2,8 @@ package main.gfx;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Insets;
+
 import javax.swing.*;
 
 import main.gamestate.GameState;
@@ -13,21 +15,18 @@ import main.ThreadClock;
  */
 public class Gfx implements Runnable
 {
-	/* TODO: Add a way to pause rendering when the window is
-	 * minimized/iconified.
-	 */
 	/** The name of the primary game frame. */
 	public static final String MAIN_FRAME_NAME = "Space Invaders";
+	/** Default window dimensions. */
+	public static final int DEFAULT_WINDOW_DIM = main.gamestate.level.Level.getLevelHeight();
 	/** Number of layers in the primary window. */
 	public static final int NUM_LAYERS = 7;
 	/** The frame of the primary/most important window. */
 	private static JFrame mainFrame;
-	/** Contains all layers used to render graphics. */
+	/** Handles all layers used to render graphics.
+	 * @see LayerContainer
+	 */
 	private static LayerContainer layerContainer;
-	/** Width of the render area all components should use. */
-	private static int renderAreaWidth;
-	/** Height of the render area all components should use. */
-	private static int renderAreaHeight;
 	/** The thread for updating graphics. */
 	private Thread gfxThread;
 	/** The clock cycle handler. */
@@ -39,26 +38,22 @@ public class Gfx implements Runnable
 	public Gfx()
 	{
 		System.out.println("Setting Up Graphics System...");
-		renderAreaWidth = 400;
-		renderAreaHeight = 400;
-		Dimension dim = new Dimension(renderAreaWidth, renderAreaHeight);
+		// Default window size
+		Dimension dim = new Dimension(DEFAULT_WINDOW_DIM, DEFAULT_WINDOW_DIM);
 		// Create the frame & layered pane
 		mainFrame = new JFrame(MAIN_FRAME_NAME);
-		// Create the container of layers
 		layerContainer = new LayerContainer();
 		layerContainer.setPreferredSize(dim);
 		mainFrame.add(layerContainer);
-		// Create & start the thread
 		gfxThread = new Thread(this);
 		clock = new ThreadClock();
 	}
 	
-	// TODO?: Modify this to be some kind of override in ThreadClock
+	// TODO?: Modify start & run to be some kind of override in ThreadClock
 	/** Starts this thread after any final initialization operations. */
 	public void start()
 	{
 		System.out.println("Starting Graphics System...");
-		// Finalize the window
 		mainFrame.pack();
 		mainFrame.setVisible(true);
 		gfxThread.start();
@@ -69,8 +64,12 @@ public class Gfx implements Runnable
 	{
 		while (true)
 		{
-			// Repaint the window components
-			mainFrame.repaint();
+			// Render only when the main window is visible
+			if (main.inputdevice.InputManager.getPrimaryWindow().isVisible())
+			{
+				// Repaint the window components
+				mainFrame.repaint();
+			}
 			clock.nextTick();
 		}
 	}
@@ -80,7 +79,15 @@ public class Gfx implements Runnable
 	 */
 	public static int getFrameWidth()
 	{
-		return renderAreaWidth;
+		// If the window is not completely setup yet, return the default size
+		if (mainFrame.getWidth() <= 0)
+		{
+			return DEFAULT_WINDOW_DIM;
+		}
+		else
+		{
+			return mainFrame.getWidth();
+		}
 	}
 	
 	/** Returns the height of the render area.
@@ -88,7 +95,15 @@ public class Gfx implements Runnable
 	 */
 	public static int getFrameHeight()
 	{
-		return renderAreaHeight;
+		// If the window is not completely setup yet, return the default size
+		if (mainFrame.getHeight() <= 0)
+		{
+			return DEFAULT_WINDOW_DIM;
+		}
+		else
+		{
+			return mainFrame.getHeight();
+		}
 	}
 	
 	/** Gets the primary JFrame for the game.
@@ -110,9 +125,9 @@ public class Gfx implements Runnable
 	 * <br>
 	 * <br> Using sub-layers (meaning within a layer, first drawn =
 	 * lowest sub-layer, last drawn = highest sub-layer) should be preferred
-	 * where possible.  Use layers to simplify graphics operations, like
-	 * rendering a tile of a tile grid at about the same time as the entities
-	 * in that tile, or rendering background animations over a
+	 * where possible.  Use layers to simplify graphics operations, for example
+	 * rendering a tile grid at the same time as the entities
+	 * in that tile grid, or rendering background animations over a
 	 * background image that doesn't change.
 	 * @param layer the index of the layer.
 	 * @return (Graphics2D) The graphics context to render to.
@@ -120,6 +135,18 @@ public class Gfx implements Runnable
 	public static Graphics2D getLayerSurface(int layer)
 	{
 		return layerContainer.getDrawingSurface(layer);
+	}
+	
+	/** Get the width of a layer. */
+	public static int getLayerWidth(int layer)
+	{
+		return layerContainer.getLayerWidth(layer);
+	}
+	
+	/** Get the height of a layer. */
+	public static int getLayerHeight(int layer)
+	{
+		return layerContainer.getLayerHeight(layer);
 	}
 	
 	/** Updates the local reference to the game state.  Used to call game state
@@ -132,7 +159,7 @@ public class Gfx implements Runnable
 	}
 	
 	/** Clears the drawing surface of the specified layer.
-	 * After clearing, any references to the drawing surface may need to be
+	 * After clearing, any references to the drawing surface will need to be
 	 * updated with {@link #getLayerSurface(int)}.
 	 * @param layer the index of the layer
 	 * @see {@link #getLayerSurface(int)}
@@ -167,5 +194,35 @@ public class Gfx implements Runnable
 	public static synchronized void clearLayersInRange(int start, int stop)
 	{
 		layerContainer.clearLayersInRange(start, stop);
+	}
+	
+	public static synchronized void frameResized(JFrame frame)
+	{
+		// Check which frame has been resized
+		if (frame == mainFrame)
+		{
+			Dimension newSize = frame.getSize();
+			Insets mfi = mainFrame.getInsets();
+			newSize.setSize(
+					newSize.getWidth()-mfi.right-mfi.left,
+					newSize.getHeight()-mfi.top-mfi.bottom
+					);
+			layerContainer.adjustSize(newSize);
+		}
+		else
+		{
+			System.out.println("Unknown frame resized: " + frame);
+		}
+		frame.validate();
+	}
+	
+	/** Returns the scaling factor for the specified layer. The scaling
+	 * factor is "current_width/default_width".
+	 * @param layer the index of the layer
+	 * @return (double) the scaling factor
+	 */
+	public static synchronized double getLayerScaleFactor(int layer)
+	{
+		return layerContainer.getScaleFactor(layer);
 	}
 }

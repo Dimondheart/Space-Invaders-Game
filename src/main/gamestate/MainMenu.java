@@ -51,15 +51,15 @@ public class MainMenu extends GameState
 		layers[0].fillRect(
 				0,
 				0,
-				Gfx.getFrameWidth(),
-				Gfx.getFrameHeight()
+				Gfx.getLayerWidth(0),
+				Gfx.getLayerHeight(0)
 				);
-		layers[1].setColor(Color.blue);
-		layers[1].fillRect(
-				Gfx.getFrameWidth()/4,
-				Gfx.getFrameHeight()/4,
-				Gfx.getFrameWidth()/2,
-				Gfx.getFrameHeight()/2
+		layers[5].setColor(Color.blue);
+		layers[5].fillRect(
+				Gfx.getLayerWidth(5)/4,
+				Gfx.getLayerHeight(5)/4,
+				Gfx.getLayerWidth(5)/2,
+				Gfx.getLayerHeight(5)/2
 				);
 	}
 }

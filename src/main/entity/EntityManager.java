@@ -1,6 +1,5 @@
 package main.entity;
 
-import java.awt.Graphics2D;
 import java.util.LinkedList;
 
 import main.entity.Entity.EntityType;
@@ -18,24 +17,72 @@ public class EntityManager
 	/** List of simple entities, which can all be handled the same way. */
 	private LinkedList<Entity> entities;
 	
+	/** Basic constructor. */
 	public EntityManager()
 	{
 		entities = new LinkedList<Entity>();
 		bullets = new LinkedList<Bullet>();
-		// Create the player
-		entities.add(new PlayerShip());
-		// Create test barriers
-		for (int x = 200-8*3; x < 200+8*3; x += 8)
+	}
+	
+	/** Adds the specified bullet to the list of bullets. */
+	public static synchronized void addBullet(Bullet bullet)
+	{
+		// Don't add a null bullet and don't add too many bullets
+		if (bullet != null && bullets.size() < MAX_BULLETS)
 		{
-			entities.add(new Barrier(x, 100));
-			entities.add(new Barrier(x, 92));
-			entities.add(new Barrier(x, 84));
-			entities.add(new Barrier(x, 76));
+			// Add bullet to the list
+			bullets.add(bullet);
 		}
-		// Test Entity
-		entities.add(new BasicEnemyShip(175, 400-20-4));
-		entities.add(new BasicEnemyShip(200, 400-20-4));
-		entities.add(new BasicEnemyShip(225, 400-20-4));
+	}
+	
+	/** Clears all statically stored information. */
+	public static synchronized void reset()
+	{
+		bullets.clear();
+	}
+	
+	/** Gets the number of enemies remaining. */
+	public int numEnemiesLeft()
+	{
+		return numEntityTypeLeft(EntityType.ENEMY);
+	}
+	
+	/** Gets the number of players remaining. */
+	public int numPlayersLeft()
+	{
+		return numEntityTypeLeft(EntityType.PLAYER);
+	}
+	
+	/** Get how many of the specified type of entity there currently are. */
+	private synchronized int numEntityTypeLeft(EntityType type)
+	{
+		int num = 0;
+		for (Entity entity : entities)
+		{
+			if (entity.getType() == type)
+			{
+				++num;
+			}
+		}
+		return num;
+	}
+	
+	/** Add the player entity. */
+	public synchronized void addPlayer(Entity player)
+	{
+		entities.addFirst(player);
+	}
+	
+	/** Add an enemy entity, like an enemy ship. */
+	public synchronized void addEnemy(Entity enemy)
+	{
+		entities.add(enemy);
+	}
+	
+	/** Add an ambient entity, like a barrier. */
+	public synchronized void addAmbient(Entity ambient)
+	{
+		entities.add(ambient);
 	}
 	
 	/** Updates all entities; performs AI, etc. */
@@ -87,17 +134,15 @@ public class EntityManager
 			}
 			entity.update();
 		}
-		// TODO: Make this generic for all enemy types
 		// Update enemies if one hit the wall
 		if (BasicEnemyShip.hitWall())
 		{
 			for (Entity entity : entities)
 			{
-				if (entity.getType() != EntityType.ENEMY)
+				if (entity.getType() == EntityType.ENEMY)
 				{
-					continue;
+					((BasicEnemyShip) entity).moveDown();
 				}
-				((BasicEnemyShip) entity).moveDown();
 			}
 			BasicEnemyShip.resetHitWall();
 		}
@@ -116,22 +161,5 @@ public class EntityManager
 		{
 			entity.render(Gfx.getLayerSurface(3));
 		}
-	}
-	
-	/** Adds the specified bullet to the list of bullets. */
-	public static synchronized void addBullet(Bullet bullet)
-	{
-		// Don't add a null bullet and don't add too many bullets
-		if (bullet != null && bullets.size() < MAX_BULLETS)
-		{
-			// Add bullet to the list
-			bullets.add(bullet);
-		}
-	}
-	
-	/** Clears all statically stored information. */
-	public static synchronized void reset()
-	{
-		bullets = null;
 	}
 }

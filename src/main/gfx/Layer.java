@@ -3,9 +3,9 @@ package main.gfx;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.*;
 import javax.swing.*;
 
@@ -22,8 +22,8 @@ public class Layer extends JPanel
 	private BufferedImage buffImg;
 	/** The buffered image's surface for this layer. */
 	private Graphics2D buffSurf;
-	/** The color the drawing surface is cleared to. */
-	private Color bgColor = new Color(0,0,0,0);
+	/** The ratio CurrentWidth/DefaultWidth for the width of this layer. */
+	private double scaleFactor;
 	
 	/** The normal constructor for a Layer.
 	 * @param width of the layer
@@ -31,9 +31,11 @@ public class Layer extends JPanel
 	 */
 	public Layer(int newWidth, int newHeight)
 	{
-		width = newWidth;
-		height = newHeight;
-		// Setup the buffer for this layer
+		adjustSize(new Dimension(newWidth, newHeight));
+	}
+	
+	private void createNewBuffer()
+	{
 		buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		buffSurf = buffImg.createGraphics();
 	}
@@ -46,28 +48,49 @@ public class Layer extends JPanel
 		return buffSurf;
 	}
 	
-	public synchronized void paintComponent(Graphics g)
+	/** Gets the width of this layer. */
+	public int getLayerWidth()
 	{
-//		Graphics2D g2 = (Graphics2D)g;
-//		g2.drawImage(buffImg, 0, 0, Gfx.getRenderAreaWidth(), Gfx.getRenderAreaHeight(), null);
+		return width;
 	}
 	
+	/** Gets the height of this layer. */
+	public int getLayerHeight()
+	{
+		return height;
+	}
 	
-	/** Temporary test implementation of layer updating.
-	 * Delete this once true <tt>JLayeredPane</tt> layering is completed.
-	 * @param g2 the graphics context for the primary frame
+	/** Gets the scale factor for this layer. */
+	public double getScaleFactor()
+	{
+		return scaleFactor;
+	}
+	
+	@Override
+	public synchronized void paintComponent(Graphics g)
+	{
+	}
+	
+	/** Draws this layer to the specified surface.
+	 * @param g2 the graphics context to draw to
 	 */
-	@Deprecated
 	public synchronized void flip(Graphics2D g2)
 	{
 		g2.drawImage(
 				buffImg,
 				0,
 				0,
-				Gfx.getFrameWidth(),
-				Gfx.getFrameHeight(),
+				getLayerWidth(),
+				getLayerHeight(),
 				null
 				);
+		if (main.Game.debugEnabled())
+		{
+			Color oC = g2.getColor();
+			g2.setColor(Color.cyan);
+			g2.drawRect(0, 0, getLayerWidth()-1, getLayerHeight()-1);
+			g2.setColor(oC);
+		}
 	}
 	
 	/** Clears the buffer of this layer. */
@@ -77,10 +100,24 @@ public class Layer extends JPanel
 		Composite oldComp = buffSurf.getComposite();
 		// Change the composite
 		buffSurf.setComposite(AlphaComposite.Clear);
-//		buffSurf.setColor(bgColor);
 		// Clear the surface
 		buffSurf.fillRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
 		// Set the composite back to the original
 		buffSurf.setComposite(oldComp);
+	}
+	
+	/** Adjusts the dimensions of this layer. */
+	public synchronized void adjustSize(Dimension newDims)
+	{
+		width = newDims.width;
+		height = newDims.height;
+		this.setSize(newDims);
+		createNewBuffer();
+		updateScaleFactor();
+	}
+	
+	private void updateScaleFactor()
+	{
+		scaleFactor = (double)getWidth()/(double)Gfx.DEFAULT_WINDOW_DIM;
 	}
 }

@@ -6,9 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JLayeredPane;
 
-/** Handles the layers. Basically a thin layer over a JLayeredPane that
- * works with the rendering delegation used by this program.
- */
+/** Handles the different layers of the graphics for this application. */
 public class LayerContainer extends JLayeredPane
 {
 	private static final long serialVersionUID = 1L;
@@ -17,7 +15,8 @@ public class LayerContainer extends JLayeredPane
 	/** List of the components representing each layer. */
 	private Layer[] layers;
 	
-	/** Basic constructor. */
+	// TODO: Figure out how to copy javadoc descriptions
+	/** Handles the different layers of the graphics for this application. */
 	public LayerContainer()
 	{
 		// Setup the layers
@@ -25,19 +24,35 @@ public class LayerContainer extends JLayeredPane
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
 			layers[i] = new Layer(Gfx.getFrameWidth(), Gfx.getFrameHeight());
-			layers[i].setPreferredSize(
-					new Dimension(Gfx.getFrameWidth(), Gfx.getFrameHeight())
-					);
-			add(layers[i], i);
+//			add(layers[i], i);
 		}
 	}
 	
 	/** Gets the drawing surface for the specified layer.
 	 * @param layer the index of the layer
+	 * @return (Graphics2D) A reference to the drawing surface
 	 */
 	public Graphics2D getDrawingSurface(int layer)
 	{
 		return layers[layer].getDrawingSurface();
+	}
+	
+	/** Return the width of the specified layer. */
+	public int getLayerWidth(int layer)
+	{
+		return layers[layer].getWidth();
+	}
+	
+	/** Return the height of the specified layer. */
+	public int getLayerHeight(int layer)
+	{
+		return layers[layer].getHeight();
+	}
+	
+	/** Return the scale factor for the specified layer. */
+	public double getScaleFactor(int layer)
+	{
+		return layers[layer].getScaleFactor();
 	}
 	
 	/** Updates the game state that render is called from.
@@ -87,6 +102,7 @@ public class LayerContainer extends JLayeredPane
 		}
 	}
 	
+	@Override
 	protected synchronized void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
@@ -95,10 +111,50 @@ public class LayerContainer extends JLayeredPane
 		// Clear the graphics context
 		g2.setBackground(Color.black);
 		g2.clearRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
-		/* Temporary dummy implementation of rendering layers. */
+		// Render the layers
 		for (int i = 0; i < Gfx.NUM_LAYERS; ++i)
 		{
 			layers[i].flip(g2);
+		}
+		if (main.Game.debugEnabled())
+		{
+			g2.setColor(Color.blue);
+			g2.drawRect(0, 0, Gfx.DEFAULT_WINDOW_DIM, Gfx.DEFAULT_WINDOW_DIM);
+		}
+	}
+	
+	/** Changes the size of all the layers using newDims as the maximum
+	 * allowed dimensions.
+	 * @param newDims the maximum dimensions of the layers
+	 */
+	protected synchronized void adjustSize(Dimension newDims)
+	{
+		Dimension adjustedDims = new Dimension(0,0);
+		// Adjusted dimensions that cover the largest possible square on screen
+		if (newDims.getHeight() <= newDims.getWidth())
+		{
+			adjustedDims.setSize(newDims.getHeight(), newDims.getHeight());
+		}
+		else
+		{
+			adjustedDims.setSize(newDims.getWidth(), newDims.getWidth());
+		}
+		// Layer container covers whole window
+		this.setSize(newDims);
+		// Background layers cover whole window
+		for (int i = 0; i < 2; ++i)
+		{
+			layers[i].adjustSize(newDims);
+		}
+		// Main layers cover the largest square area
+		for (int i = 2; i < 5; ++i)
+		{
+			layers[i].adjustSize(adjustedDims);
+		}
+		// GUI layers cover the entire screen
+		for (int i = 5; i < 7; ++i)
+		{
+			layers[i].adjustSize(newDims);
 		}
 	}
 }

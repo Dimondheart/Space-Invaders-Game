@@ -1,18 +1,20 @@
 package main.inputdevice;
 
+import main.gfx.Gfx;
+
 /** Manages all of the input devices. */
 public class InputManager
 {
-	public static KeyboardInput keyboard;
-	public static MouseInput mouse;
-	public static WindowInput window;
+	private static KeyboardInput keyboard;
+	private static MouseInput mouse;
+	private static WindowInput window;
 	
-	/** Basic constructor. */
-	public InputManager()
+	/** Static initialization. */
+	static
 	{
-		keyboard = new KeyboardInput(main.gfx.Gfx.getPrimaryFrame());
-		mouse = new MouseInput(main.gfx.Gfx.getPrimaryFrame());
-		window = new WindowInput(main.gfx.Gfx.getPrimaryFrame());
+		keyboard = new KeyboardInput(Gfx.getPrimaryFrame());
+		mouse = new MouseInput(Gfx.getPrimaryFrame());
+		window = new WindowInput(Gfx.getPrimaryFrame());
 	}
 	
 	/** Gets the current keyboard.
@@ -29,6 +31,12 @@ public class InputManager
 	public static MouseInput getMouse()
 	{
 		return mouse;
+	}
+	
+	/** Gets the primary window. */
+	public static WindowInput getPrimaryWindow()
+	{
+		return window;
 	}
 	
 	/** Clears the stored data of all input devices. */

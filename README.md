@@ -2,19 +2,20 @@
 
 A Space Invaders remake.
 
-![spaceinvaders-sample3](https://cloud.githubusercontent.com/assets/7505459/9895060/b5544dc0-5bf0-11e5-9932-52ddbf0f45f0.png)
+![spaceinvaders-sample5](https://cloud.githubusercontent.com/assets/7505459/10152683/7a586664-661a-11e5-9db3-0c59ceabe5b8.png)
 
 ## Features ##
 
 ### Current Features ###
-- Partial game states (main menu, level, quit)
-- Partial entities (barriers, player, enemies)
-- Movement
-- Player control
-- Basic weapon & bullets
+- Partial game states (main menu, classic, quit)
+- Simple entities (barriers, player, enemies)
+- Movement & player control
+- Simple weapon & bullets
 - Health, damage & destruction
-- Basic graphics (including a nifty random star background generator!)
+- Simple graphics
 - Partial framework for a sound system
+- Re-sizing the window scales the graphics
+- (*Cough-*hit F3 to see debugging-related stuff!*-Cough*)
 - And a few more things...
 
 ### Planned Features ###
@@ -28,3 +29,4 @@ At some point in the future, after I have finished implementing the basic Space 
 - Multiplayer option (both classic and, if added, the defense/coop game mode mentioned above)
 - A special weapon with a longer recharge time that allows you to shoot sideways (gives you more chance to win and hopefully would make it more fun and less "OMG I let one  or two enemies get too far down I'm doomed!!!", and also some other possibilities for things like suicide bomber enemies that come in from the side)
 - Tough motherships that dispense smaller enemies until destroyed
+- Multiplayer mode where one player plays as invaders
