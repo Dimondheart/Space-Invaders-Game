@@ -1,5 +1,7 @@
 package main.entity.entitycomponent;
 
+import java.awt.Dimension;
+
 /** Handles all entity details having to do with the grid and collisions.
  * Development note; many of the unused values/methods in here are for when
  * I get around to implementing collision boxes instead of collision circles.
@@ -12,44 +14,63 @@ public class Body
 	 * Use the coordinates of the corners for some kind of distance checking.
 	 */
 	/* Remember to keep a grid separate from the screen for position stuff. */
+	/** Use to access an X value in an xy pair. */
+	private static final int X = 0;
+	/** Use to access a Y value in an xy pair. */
+	private static final int Y = 1;
 	/** The x position. */
 	private int x;
 	/** The y position. */
 	private int y;
 	/** The movement vector of this entity. */
-	private int[] vector;
-	/** Radius of the entities collision area. */
-	private int radius;
+	private int[] vector = new int[2];
 	/** Width of this entity. */
 	private int width;
 	/** Height of this entity. */
 	private int height;
 	/** Sets if the entity should be stopped by map edges. Default is true. */
 	private boolean stopAtEdge = true;
+	/** Specifies if this body is touching an edge of the map/grid. */
+	private boolean touchingEdge = false;
 	
-	/** Constructor, takes an argument for the collision area radius. */
-	public Body(int newRadius)
+	/** Each corner of the rectangular collision box. */
+	private enum Corner
 	{
-		radius = newRadius;
-		vector = new int[2];
-		setVector(0, 0);
-		setPos(200, getRadius() + 4);
+		UPPER_LEFT,
+		UPPER_RIGHT,
+		LOWER_RIGHT,
+		LOWER_LEFT
 	}
 	
-	/** Constructor, takes arguments for radius and initial position. */
-	public Body(int newRadius, int newX, int newY)
+	/** Constructor, takes arguments for the width and height. */
+	public Body(Dimension dims)
 	{
-		radius = newRadius;
+		setWidth(dims.width);
+		setHeight(dims.height);
+		setVector(0, 0);
+		setPos(200, getHeight() + 4);
+	}
+	
+	/** Constructor, takes arguments for dimensions and initial position. */
+	public Body(int newX, int newY, Dimension dims)
+	{
+		setWidth(dims.width);
+		setHeight(dims.height);
 		vector = new int[2];
 		setVector(0, 0);
 		setPos(newX, newY);
+	}
+	
+	public boolean stopAtEdges()
+	{
+		return stopAtEdge;
 	}
 	
 	/** Checks if this body has passed an edge of the map/grid. */
 	public boolean isPastEdge()
 	{
 		// Don't bother to check if the entity is stopped by edges
-		if (stopAtEdge)
+		if (stopAtEdges())
 		{
 			return false;
 		}
@@ -72,10 +93,16 @@ public class Body
 		return y;
 	}
 	
-	/** Gets the radius of this body. */
-	public int getRadius()
+	/** Get the width of this body. */
+	public int getWidth()
 	{
-		return radius;
+		return width;
+	}
+	
+	/** Get the height of this body. */
+	public int getHeight()
+	{
+		return height;
 	}
 	
 	/** Gets the x component of the vector. */
@@ -88,6 +115,74 @@ public class Body
 	public int getVectorY()
 	{
 		return vector[1];
+	}
+	
+	/** Get the map/grid coordinates of the specified corner. */
+	public int[] getCornerCoords(Corner corner)
+	{
+		int[] coords = {0,0};
+		switch (corner)
+		{
+		case LOWER_LEFT:
+			coords[0] = getX()-getWidth()/2;
+			coords[1] = getY()-getHeight()/2;
+			break;
+		case LOWER_RIGHT:
+			coords[0] = getX()+getWidth()/2;
+			coords[1] = getY()-getHeight()/2;
+			break;
+		case UPPER_LEFT:
+			coords[0] = getX()-getWidth()/2;
+			coords[1] = getY()+getHeight()/2;
+			break;
+		case UPPER_RIGHT:
+			coords[0] = getX()+getWidth()/2;
+			coords[1] = getY()+getHeight()/2;
+			break;
+		default:
+			break;
+		}
+		return coords;
+	}
+	
+	/** Checks if the other specified body is touching this one.
+	 * <br>See the file "RectCollisionsExplained.md" for info on how
+	 * this works.
+	 * @param otherBody the other body to check for a collision with
+	 */
+	public synchronized boolean isTouching(Body otherBody)
+	{
+		// Get certain coords of the other body to compare to
+		int[] a = otherBody.getCornerCoords(Corner.UPPER_LEFT);
+		int[] d = otherBody.getCornerCoords(Corner.LOWER_RIGHT);
+		// Check if any of this bodies corners are inside/on other bod. bounds
+		for (Corner c : Corner.values())
+		{
+			int[] myC = getCornerCoords(c);
+			if ((a[X]<=myC[X] && myC[X]<=d[X]) && (d[Y]<=myC[Y] && myC[Y]<=a[Y]))
+			{
+				return true;
+			}
+		}
+		// Get certain coords of this body to compare to
+		a = getCornerCoords(Corner.UPPER_LEFT);
+		d = getCornerCoords(Corner.LOWER_RIGHT);
+		// Check if any of other bodies corners are inside/on this bod. bounds
+		for (Corner c : Corner.values())
+		{
+			int[] otherC = otherBody.getCornerCoords(c);
+			if ((a[X]<=otherC[X] && otherC[X]<=d[X]) && (d[Y]<=otherC[Y] && otherC[Y]<=a[Y]))
+			{
+				return true;
+			}
+		}
+		// No collisions detected
+		return false;
+	}
+	
+	public synchronized boolean isTouchingEdge()
+	{
+		return touchingEdge;
 	}
 	
 	/** Set the position of this body.
@@ -156,41 +251,108 @@ public class Body
 		stopAtEdge = stop;
 	}
 	
-	/** Checks if the other specified body is touching this one.
-	 * @param otherBody the other body to check for a collision with
-	 */
-	public synchronized boolean isTouching(Body otherBody)
+	/** Set the width of this body. */
+	private synchronized void setWidth(int w)
 	{
-		// Get the distance between the two body centers
-		int distance = (int)Math.hypot(
-				(double)(getX() - otherBody.getX()),
-				(double)(getY() - otherBody.getY())
-				);
-		// See if they would be closer than their total radius distance
-		if (distance <= getRadius() + otherBody.getRadius())
-		{
-			return true;
-		}
-		return false;
+		width = w;
 	}
-
+	
+	/** Set the height of this body. */
+	private synchronized void setHeight(int h)
+	{
+		height = h;
+	}
+	
+	/** Set if the body is touching a map/grid edge. */
+	private synchronized void setTouchingEdge(boolean touching)
+	{
+		touchingEdge = touching;
+	}
+	
 	/** Moves the body using its movement vector. */
 	public void move()
 	{
 		// Determine new coords
-		int newX = getX() + vector[0];
-		int newY = getY() + vector[1];
+		int newX = getX() + getVectorX();
+		int newY = getY() + getVectorY();
+		// Flag for if touching a map/grid edge
+		boolean touchEdge = false;
 		// If the body is set to not stop at edges
 		if (!stopAtEdge)
 		{
-			setX(getX() + vector[0]);
-			setY(getY() + vector[1]);
+			setX(newX);
+			setY(newY);
 		}
 		// Otherwise stop at any edges
-		else if ((0 <= newX && newX <= 400) && (0 < newY && newY < 400))
+		else
 		{
-			setX(getX() + vector[0]);
-			setY(getY() + vector[1]);
+			// Move x
+			if (0 <= newX-getWidth()/2 && newX+getWidth()/2 <= 400)
+			{
+				setX(newX);
+			}
+			else
+			{
+				touchEdge = true;
+				if (getVectorX() < 0)
+				{
+					for (int maxMove = getVectorX()+1; maxMove < 0; ++maxMove)
+					{
+						newX = getX()+maxMove;
+						if (0 <= newX-getWidth()/2 && newX+getWidth()/2 <= 400)
+						{
+							setX(newX);
+							break;
+						}
+					}
+				}
+				else if(getVectorX() > 0)
+				{
+					for (int maxMove = getVectorX()-1; maxMove > 0; --maxMove)
+					{
+						newX = getX()+maxMove;
+						if (0 <= newX-getWidth()/2 && newX+getWidth()/2 <= 400)
+						{
+							setX(newX);
+							break;
+						}
+					}
+				}
+			}
+			// Move y
+			if (0 < newY && newY < 400)
+			{
+				setY(newY);
+			}
+			else
+			{
+				touchEdge = true;
+				if (getVectorY() < 0)
+				{
+					for (int maxMove = getVectorY()+1; maxMove < 0; ++maxMove)
+					{
+						newY = getY()+maxMove;
+						if (0 <= newY-getHeight()/2 && newY+getHeight()/2 <= 400)
+						{
+							setY(newY);
+							break;
+						}
+					}
+				}
+				else if(getVectorY() > 0)
+				{
+					for (int maxMove = getVectorY()-1; maxMove > 0; --maxMove)
+					{
+						newY = getY()+maxMove;
+						if (0 <= newY-getHeight()/2 && newY+getHeight()/2 <= 400)
+						{
+							setY(newY);
+							break;
+						}
+					}
+				}
+			}
 		}
+		setTouchingEdge(touchEdge);
 	}
 }

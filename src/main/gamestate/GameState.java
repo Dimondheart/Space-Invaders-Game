@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import main.gfx.Gfx;
 import main.inputdevice.InputManager;
 
+import static java.awt.event.KeyEvent.*;
+
 /** Base Class for a game state. Import this as an interface for all
  * the game states.
  */
@@ -100,6 +102,11 @@ public abstract class GameState
 	/** One processing cycle of actions for a game state. */
 	public void cycle()
 	{
+		// Activate/deactivate debug mode
+		if (InputManager.getKeyboard().isKeyDownOnce(VK_F3))
+		{
+			main.Game.toggleDebug();
+		}
 		// Check if a quit status has been indicated
 		if (quitIndicated)
 		{

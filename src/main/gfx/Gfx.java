@@ -1,13 +1,10 @@
 package main.gfx;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import main.gamestate.GameState;
 import main.ThreadClock;

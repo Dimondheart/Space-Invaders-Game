@@ -84,10 +84,13 @@ public class Layer extends JPanel
 				getLayerHeight(),
 				null
 				);
-		Color oC = g2.getColor();
-		g2.setColor(Color.cyan);
-		g2.drawRect(0, 0, getLayerWidth()-1, getLayerHeight()-1);
-		g2.setColor(oC);
+		if (main.Game.debugEnabled())
+		{
+			Color oC = g2.getColor();
+			g2.setColor(Color.cyan);
+			g2.drawRect(0, 0, getLayerWidth()-1, getLayerHeight()-1);
+			g2.setColor(oC);
+		}
 	}
 	
 	/** Clears the buffer of this layer. */

@@ -2,19 +2,20 @@
 
 A Space Invaders remake.
 
-![spaceinvaders-sample4](https://cloud.githubusercontent.com/assets/7505459/10128137/eb1b61b4-6573-11e5-8b7b-f821248aa966.png)
+![spaceinvaders-sample5](https://cloud.githubusercontent.com/assets/7505459/10152683/7a586664-661a-11e5-9db3-0c59ceabe5b8.png)
 
 ## Features ##
 
 ### Current Features ###
-- Partial game states (main menu, level, quit)
-- Partial entities (barriers, player, enemies)
-- Movement
-- Player control
-- Basic weapon & bullets
+- Partial game states (main menu, classic, quit)
+- Simple entities (barriers, player, enemies)
+- Movement & player control
+- Simple weapon & bullets
 - Health, damage & destruction
-- Basic graphics (including a nifty random star background generator!)
+- Simple graphics
 - Partial framework for a sound system
+- Re-sizing the window scales the graphics
+- (*Cough-*hit F3 to see debugging-related stuff!*-Cough*)
 - And a few more things...
 
 ### Planned Features ###

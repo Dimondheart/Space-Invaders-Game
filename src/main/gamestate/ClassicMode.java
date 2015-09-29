@@ -9,7 +9,6 @@ import java.util.Random;
 
 import main.gfx.Gfx;
 import main.inputdevice.InputManager;
-import main.entity.*;
 import main.gamestate.level.Level;
 import main.gamestate.level.Level.LevelState;
 
@@ -22,6 +21,8 @@ public class ClassicMode extends GameState
 	private int levelNum;
 	private Level level;
 	private BufferedImage bgImg;
+	// Color used to highlight the 'battleground'
+	private Color highlightColor = new Color(200,200,200,50);
 	
 	// TODO?: Create a constructor for specifying the starting level
 	
@@ -90,6 +91,32 @@ public class ClassicMode extends GameState
 		drawBG();
 		// Render the level stuff
 		level.render();
+		// Render the stuff that highlights the 'battlefield'
+		layers[5].setColor(highlightColor);
+		// Add highlight to the sides
+		if(Gfx.getFrameWidth() > Gfx.getFrameHeight())
+		{
+			int width = Gfx.getLayerWidth(0)-Gfx.getLayerWidth(2);
+			int height = Gfx.getLayerHeight(5);
+			layers[5].fillRect(
+					Gfx.getLayerWidth(2),
+					0,
+					width,
+					height
+					);
+		}
+		// Add horizontal highlights
+		else if(Gfx.getFrameWidth() < Gfx.getFrameHeight())
+		{
+			int width = Gfx.getLayerWidth(0);
+			int height = Gfx.getLayerHeight(0)-Gfx.getLayerHeight(2);
+			layers[5].fillRect(
+					0,
+					Gfx.getLayerHeight(2),
+					width,
+					height
+					);
+		}
 	}
 	
 	@Override
@@ -131,10 +158,16 @@ public class ClassicMode extends GameState
 				);
 		Graphics2D surf = bgImg.createGraphics();
 		Random rng = new Random();
-		// Determine the number of stars, based on the area of the BG graphic
-		int numStars = (BGSize.width*BGSize.height) /
-				(Gfx.DEFAULT_WINDOW_DIM*Gfx.DEFAULT_WINDOW_DIM) *
-				250;
+		/* Determine the number of stars, based on the area of the BG graphic.
+		 * Note: The way this is calculated has the same result as
+		 * (BG Area) / (Default Window Area), but the below will work with
+		 * higher screen resolutions/sizes.
+		 */
+		int numStars = (int)(
+				(BGSize.getWidth()/(double)Gfx.DEFAULT_WINDOW_DIM)
+				* (BGSize.getHeight()/(double)Gfx.DEFAULT_WINDOW_DIM)
+				* 250.000
+				);
 		System.out.println(numStars);
 		// Draw a number of stars, based on the total area of the graphic
 		for (

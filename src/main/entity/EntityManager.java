@@ -1,6 +1,5 @@
 package main.entity;
 
-import java.awt.Graphics2D;
 import java.util.LinkedList;
 
 import main.entity.Entity.EntityType;
@@ -135,17 +134,15 @@ public class EntityManager
 			}
 			entity.update();
 		}
-		// TODO: Make this generic for all enemy types
 		// Update enemies if one hit the wall
 		if (BasicEnemyShip.hitWall())
 		{
 			for (Entity entity : entities)
 			{
-				if (entity.getType() != EntityType.ENEMY)
+				if (entity.getType() == EntityType.ENEMY)
 				{
-					continue;
+					((BasicEnemyShip) entity).moveDown();
 				}
-				((BasicEnemyShip) entity).moveDown();
 			}
 			BasicEnemyShip.resetHitWall();
 		}

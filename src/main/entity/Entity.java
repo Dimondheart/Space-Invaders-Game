@@ -16,10 +16,13 @@ public abstract class Entity
 	public Weapon weapon;
 	/** Color used to render an entity if not using graphics. */
 	protected Color renderColor;
-	
 	/** The generic entity type of this entity instance. */
 	protected EntityType type;
-	
+	/***/
+	protected int scrX;
+	protected int scrY;
+	protected int scrW;
+	protected int scrH;
 	/** If this entity needs to be destroyed. */
 	private boolean destroy = false;
 	
@@ -62,7 +65,32 @@ public abstract class Entity
 	 */
 	public void render(Graphics2D g2)
 	{
+		/* Set screen positioning values */
+		// Get the center x & adj to screen coords
+		scrX = (int)((double)body.getX() * Gfx.getLayerScaleFactor(2));
+		// Get the center y and adjust it to screen coordinates
+		scrY = (int)(
+				(double)(
+						main.gamestate.level.Level.getLevelHeight()
+						- body.getY()
+						)
+				* Gfx.getLayerScaleFactor(2)
+				);
+		// Width on screen
+		scrW = (int)((double)body.getWidth() * Gfx.getLayerScaleFactor(2));
+		// Height on screen
+		scrH = (int)((double)body.getHeight() * Gfx.getLayerScaleFactor(2));
+		// Change x and y to the upper left corner
+		scrX = scrX - scrW/2;
+		scrY = scrY - scrH/2;
+		/* Render the entity */
 		renderEntity(g2);
+		/* Debug mode - draw collision box outline */
+		if (main.Game.debugEnabled())
+		{
+			g2.setColor(renderColor);
+			g2.drawRect(scrX, scrY, scrW, scrH);
+		}
 	}
 	
 	/** Marks this entity to be destroyed. */
@@ -84,22 +112,7 @@ public abstract class Entity
 	 */
 	protected void renderEntity(Graphics2D g2)
 	{
-		// Get the center x
-		int scrx = (int)((double)body.getX() * Gfx.getLayerScaleFactor(2));
-		// Get the center y and adjust it to screen coordinates
-		int scry = (int)(
-				(double)(
-						main.gamestate.level.Level.getLevelHeight()
-						- body.getY()
-						)
-				* Gfx.getLayerScaleFactor(2)
-				);
-		int scrRadius = (int)((double)body.getRadius() * Gfx.getLayerScaleFactor(2));
-		// Change x and y to the upper left corner
-		scrx = scrx - scrRadius;
-		scry = scry - scrRadius;
-		// Draw a placeholder graphic
 		g2.setColor(renderColor);
-		g2.fillOval(scrx, scry, scrRadius*2, scrRadius*2);
+		g2.fillRect(scrX, scrY, scrW, scrH);
 	}
 }

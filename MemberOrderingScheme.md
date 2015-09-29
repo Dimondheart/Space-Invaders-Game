@@ -28,10 +28,12 @@ This file explains this repositories standard for sorting the members of objects
 
 ### Abstracts ###
 
+### Everything Else Note Mentioned ###
+
 ### Getters ###
 This includes boolean returns like "isKeyPressed".
 
 ### Setters ###
 This includes functions that add something to a list like "addPlayerEntity"
 
-### Everything Else ###
+## Nested Classes ##

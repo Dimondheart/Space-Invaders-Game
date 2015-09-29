@@ -1,6 +1,5 @@
 package main.entity.entitycomponent;
 
-import main.entity.Entity;
 import main.entity.Entity.EntityType;
 import main.entity.Bullet;
 import main.entity.EntityManager;

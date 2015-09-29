@@ -1,0 +1,1 @@
+* Organize files into categories (subdirectories) in their respective folders, and this organizational structure will be used to get resources after they have all been loaded.

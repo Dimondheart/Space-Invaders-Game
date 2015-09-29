@@ -9,6 +9,8 @@ import main.gamestate.*;
  */
 public class Game
 {
+	/** Allows/denies certain debugging operations. */
+	public static boolean debug_mode = false;
 	/** The clock/cycle controller for this thread. */
 	private ThreadClock clock;
 	/** Current state of the game. */
@@ -29,6 +31,18 @@ public class Game
 		soundSys = new main.SoundSystem();
 		// Select a game state to start with
 		createNewGameState(GameState.GameStates.MAIN_MENU);
+	}
+	
+	/** Toggles the debug mode variable. */
+	public static synchronized void toggleDebug()
+	{
+		debug_mode = !debug_mode;
+	}
+	
+	/** If debug mode is enabled. */
+	public static synchronized boolean debugEnabled()
+	{
+		return debug_mode;
 	}
 	
 	/** Initializes core components then calls the run function. */

@@ -116,8 +116,11 @@ public class LayerContainer extends JLayeredPane
 		{
 			layers[i].flip(g2);
 		}
-		g2.setColor(Color.blue);
-		g2.drawRect(0, 0, Gfx.DEFAULT_WINDOW_DIM, Gfx.DEFAULT_WINDOW_DIM);
+		if (main.Game.debugEnabled())
+		{
+			g2.setColor(Color.blue);
+			g2.drawRect(0, 0, Gfx.DEFAULT_WINDOW_DIM, Gfx.DEFAULT_WINDOW_DIM);
+		}
 	}
 	
 	/** Changes the size of all the layers using newDims as the maximum

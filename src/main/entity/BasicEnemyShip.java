@@ -1,11 +1,11 @@
 package main.entity;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.Random;
 
 import main.entity.entitycomponent.*;
-import main.gfx.Gfx;
 
 /** The simplest enemy space ship. */
 public class BasicEnemyShip extends Entity
@@ -22,13 +22,23 @@ public class BasicEnemyShip extends Entity
 	{
 		renderColor = Color.red;
 		type = EntityType.ENEMY;
-		body = new Body(10, newX, newY);
+		body = new Body(newX, newY, new Dimension(21,15));
 		body.setVector(2, 0);
-		body.setStopAtEdge(false);
 		health = new Health(1);
 		weapon = new Weapon();
-		// Random number generator
 		rng = new Random();
+	}
+	
+	/** Gets if an enemy has hit a wall. */
+	public static boolean hitWall()
+	{
+		return hitWall;
+	}
+	
+	/** Resets the hit wall status of enemies. */
+	public static void resetHitWall()
+	{
+		hitWall = false;
 	}
 
 	@Override
@@ -40,30 +50,25 @@ public class BasicEnemyShip extends Entity
 			weapon.fire(body, type);
 		}
 		body.move();
-		if (body.getX() <= 0 || body.getX() >= 400)
+		if (body.isTouchingEdge())
 		{
 			hitWall = true;
 		}
 	}
 	
-	/** Gets if an enemy has hit a wall. */
-	public static boolean hitWall()
+	@Override
+	public void renderEntity(Graphics2D g2)
 	{
-		return hitWall;
+		g2.setColor(renderColor);
+		g2.fillRect(scrX, scrY, scrW, scrH);
 	}
 	
 	/** Moves the enemy down a set amount and reverses its direction. */
 	public void moveDown()
 	{
-		// TODO: Decouple this from body vector
-		body.setVector(-body.getVectorX(), -body.getRadius()*2);
+		body.setVector(-body.getVectorX(), -body.getHeight());
+		// TODO: Make this less "hacky"
 		body.move();
 		body.setVectorY(0);
-	}
-	
-	/** Resets the hit wall status of enemies. */
-	public static void resetHitWall()
-	{
-		hitWall = false;
 	}
 }
