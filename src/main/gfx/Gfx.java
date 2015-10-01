@@ -2,7 +2,9 @@ package main.gfx;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
@@ -27,6 +29,8 @@ public class Gfx implements Runnable
 	 * @see LayerContainer
 	 */
 	private static LayerContainer layerContainer;
+	/** Handles, loads, etc all the graphics files. */
+	private static GraphicsManager gm;
 	/** The thread for updating graphics. */
 	private Thread gfxThread;
 	/** The clock cycle handler. */
@@ -38,6 +42,8 @@ public class Gfx implements Runnable
 	public Gfx()
 	{
 		System.out.println("Setting Up Graphics System...");
+		// Setup the graphics image/file manager
+		gm = new GraphicsManager();
 		// Default window size
 		Dimension dim = new Dimension(DEFAULT_WINDOW_DIM, DEFAULT_WINDOW_DIM);
 		// Create the frame & layered pane
@@ -147,6 +153,27 @@ public class Gfx implements Runnable
 	public static int getLayerHeight(int layer)
 	{
 		return layerContainer.getLayerHeight(layer);
+	}
+	
+	/** Gets the image data at the relative location specified (which is
+	 * everything in the path after the root graphics location)
+	 * @param relPath
+	 * @return
+	 */
+	public static synchronized BufferedImage getGraphic(String relPath)
+	{
+		return gm.getGraphic(relPath);
+	}
+	
+	public static synchronized Image getScaledGraphic(String relPath, double hScale, double vScale)
+	{
+		return gm.getScaledGraphic(relPath, hScale, vScale);
+	}
+	
+	/** Loads the specified graphic into memory. */
+	public static synchronized void loadGraphic(String relPath)
+	{
+		gm.loadGraphic(relPath);
 	}
 	
 	/** Updates the local reference to the game state.  Used to call game state

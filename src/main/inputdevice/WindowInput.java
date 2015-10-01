@@ -1,7 +1,5 @@
 package main.inputdevice;
 
-import java.awt.Color;
-import java.awt.Frame;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;

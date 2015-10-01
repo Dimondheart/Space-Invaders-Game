@@ -127,6 +127,16 @@ public class Level
 			
 			guiLayers[0].setColor(pauseBGColor);
 			guiLayers[0].fillRect(0, 0, Gfx.getFrameWidth(), Gfx.getFrameHeight());
+			guiLayers[1].drawImage(
+					Gfx.getScaledGraphic(
+							"pausemenu/TestGraphic.png",
+							Gfx.getLayerScaleFactor(5),
+							Gfx.getLayerScaleFactor(5)
+							),
+					Gfx.getLayerWidth(5)/4,
+					Gfx.getLayerHeight(5)/4,
+					null
+					);
 		}
 	}
 	

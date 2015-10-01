@@ -1,6 +1,7 @@
 package main.gamestate;
 
 import java.awt.Color;
+import java.awt.Image;
 
 import main.gfx.Gfx;
 import main.inputdevice.InputManager;
@@ -15,17 +16,9 @@ public class MainMenu extends GameState
 	public synchronized void cycleState()
 	{
 		// Dummy implementation of transitioning to a level
-		if (
-			InputManager.getKeyboard().isKeyDownOnce(VK_ENTER) ||
-			InputManager.getMouse().isBtnClicked(LEFT_BUTTON)
-			)
+		if (InputManager.getMouse().isBtnClicked(LEFT_BUTTON))
 		{
 			changeState(GameStates.PLAY_LEVEL);
-		}
-		// Quit
-		else if (InputManager.getKeyboard().isKeyDown(VK_ESCAPE))
-		{
-			changeState(GameStates.QUIT);
 		}
 	}
 
@@ -38,15 +31,15 @@ public class MainMenu extends GameState
 	@Override
 	protected synchronized void initialize()
 	{
-		// TODO: Implement setup
+		Gfx.loadGraphic("mainmenu/TestGraphic.png");
 	}
 	
 	@Override
 	protected synchronized void renderState()
 	{
-		// TODO: Implement 'actual' rendering
 		// Dummy implementation of rendering
 		Gfx.clearAllLayers();
+		Image testG = Gfx.getGraphic("mainmenu/TestGraphic.png");
 		layers[0].setColor(Color.yellow);
 		layers[0].fillRect(
 				0,
@@ -55,11 +48,11 @@ public class MainMenu extends GameState
 				Gfx.getLayerHeight(0)
 				);
 		layers[5].setColor(Color.blue);
-		layers[5].fillRect(
+		layers[5].drawImage(
+				testG,
 				Gfx.getLayerWidth(5)/4,
 				Gfx.getLayerHeight(5)/4,
-				Gfx.getLayerWidth(5)/2,
-				Gfx.getLayerHeight(5)/2
+				null
 				);
 	}
 }

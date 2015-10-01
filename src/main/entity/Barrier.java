@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import main.entity.entitycomponent.*;
+import main.gfx.Gfx;
 
 /** Those sometimes annoying, sometimes life-saving barriers located on the
  * players side of the screen.
@@ -22,6 +23,12 @@ public class Barrier extends Entity
 	}
 
 	@Override
+	public void loadGraphics()
+	{
+		Gfx.loadGraphic("entities/barrier/basic1.png");
+	}
+	
+	@Override
 	public void update()
 	{
 		// TODO Auto-generated method stub
@@ -31,6 +38,15 @@ public class Barrier extends Entity
 	public void renderEntity(Graphics2D g2)
 	{
 		g2.setColor(renderColor);
-		g2.fillOval(scrX, scrY, scrW, scrH);
+		g2.drawImage(
+				Gfx.getScaledGraphic(
+						"entities/barrier/basic1.png",
+						Gfx.getLayerScaleFactor(3),
+						Gfx.getLayerScaleFactor(3)
+						),
+				scrX,
+				scrY,
+				null
+				);
 	}
 }

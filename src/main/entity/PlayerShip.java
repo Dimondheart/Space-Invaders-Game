@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import main.entity.entitycomponent.*;
+import main.gfx.Gfx;
 import main.inputdevice.InputManager;
 
 import static java.awt.event.KeyEvent.*;
@@ -22,6 +23,12 @@ public class PlayerShip extends Entity
 		weapon = new Weapon();
 	}
 
+	@Override
+	public void loadGraphics()
+	{
+		Gfx.loadGraphic("entities/playership/basic.png");
+	}
+	
 	@Override
 	public void update()
 	{
@@ -51,7 +58,7 @@ public class PlayerShip extends Entity
 		body.move();
 		if (InputManager.getKeyboard().isKeyDown(VK_SPACE))
 		{
-			weapon.fire(body, type);
+			weapon.fire(this);
 		}
 	}
 	
@@ -59,6 +66,15 @@ public class PlayerShip extends Entity
 	public void renderEntity(Graphics2D g2)
 	{
 		g2.setColor(renderColor);
-		g2.fillRect(scrX, scrY, scrW, scrH);
+		g2.drawImage(
+				Gfx.getScaledGraphic(
+						"entities/playership/basic.png",
+						Gfx.getLayerScaleFactor(3),
+						Gfx.getLayerScaleFactor(3)
+						),
+				scrX,
+				scrY,
+				null
+				);
 	}
 }

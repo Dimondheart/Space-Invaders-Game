@@ -55,7 +55,7 @@ public class ClassicMode extends GameState
 			}
 			else
 			{
-				System.out.println("Starting Level " + levelNum);
+				System.out.println("Starting Level: " + levelNum);
 				level = new Level(levelNum);
 			}
 		}
@@ -168,7 +168,6 @@ public class ClassicMode extends GameState
 				* (BGSize.getHeight()/(double)Gfx.DEFAULT_WINDOW_DIM)
 				* 250.000
 				);
-		System.out.println(numStars);
 		// Draw a number of stars, based on the total area of the graphic
 		for (
 				int n = 0;

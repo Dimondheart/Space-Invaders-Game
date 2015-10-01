@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 import main.entity.entitycomponent.*;
+import main.gfx.Gfx;
 
 /** The result of firing a weapon. */
 public class Bullet extends Entity
@@ -19,6 +20,12 @@ public class Bullet extends Entity
 		body = new Body(new Dimension(3,6));
 		body.setStopAtEdge(false);
 		this.firedBy = firedBy;
+	}
+	
+	@Override
+	public void loadGraphics()
+	{
+		Gfx.loadGraphic("entities/bullet/basic1.png");
 	}
 
 	@Override
@@ -38,7 +45,16 @@ public class Bullet extends Entity
 	public void renderEntity(Graphics2D g2)
 	{
 		g2.setColor(renderColor);
-		g2.fillOval(scrX, scrY, scrW, scrH);
+		g2.drawImage(
+				Gfx.getScaledGraphic(
+						"entities/bullet/basic1.png",
+						Gfx.getLayerScaleFactor(3),
+						Gfx.getLayerScaleFactor(3)
+						),
+				scrX,
+				scrY,
+				null
+				);
 	}
 	
 	/** Returns the type of the entity who fired this bullet. */

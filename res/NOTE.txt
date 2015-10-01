@@ -1,1 +1,1 @@
-* Organize files into categories (subdirectories) in their respective folders, and this organizational structure will be used to get resources after they have all been loaded.
+Any files in here are not used directly in the game.  This is more of a working-directory for making and modifiying resources, any that will be used in the game should be placed in "src/resources/<resource-type-subfolder>"

@@ -27,8 +27,8 @@ public class EntityManager
 	/** Adds the specified bullet to the list of bullets. */
 	public static synchronized void addBullet(Bullet bullet)
 	{
-		// Don't add a null bullet and don't add too many bullets
-		if (bullet != null && bullets.size() < MAX_BULLETS)
+		// Don't add too many bullets
+		if (bullets.size() < MAX_BULLETS)
 		{
 			// Add bullet to the list
 			bullets.add(bullet);
@@ -112,7 +112,10 @@ public class EntityManager
 						// Destroy the bullet
 						bullet.markForDestruction();
 						System.out.println(
-								"Hit Entity. Type: " + entity.type + ". New HP: " + entity.health.getHP()
+								"Hit Entity. Type: "
+								+ entity.type
+								+ ". New HP: "
+								+ entity.health.getHP()
 								);
 					}
 				}

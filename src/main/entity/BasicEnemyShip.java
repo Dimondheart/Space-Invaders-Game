@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.util.Random;
 
 import main.entity.entitycomponent.*;
+import main.gfx.Gfx;
 
 /** The simplest enemy space ship. */
 public class BasicEnemyShip extends Entity
@@ -40,6 +41,12 @@ public class BasicEnemyShip extends Entity
 	{
 		hitWall = false;
 	}
+	
+	@Override
+	public void loadGraphics()
+	{
+		Gfx.loadGraphic("entities/basicenemyship/basic1.png");
+	}
 
 	@Override
 	public void update()
@@ -47,7 +54,7 @@ public class BasicEnemyShip extends Entity
 		int rand = rng.nextInt(1001);
 		if (FIRE_CHANCE >= rand)
 		{
-			weapon.fire(body, type);
+			weapon.fire(this);
 		}
 		body.move();
 		if (body.isTouchingEdge())
@@ -60,7 +67,16 @@ public class BasicEnemyShip extends Entity
 	public void renderEntity(Graphics2D g2)
 	{
 		g2.setColor(renderColor);
-		g2.fillRect(scrX, scrY, scrW, scrH);
+		g2.drawImage(
+				Gfx.getScaledGraphic(
+						"entities/basicenemyship/basic1.png",
+						Gfx.getLayerScaleFactor(3),
+						Gfx.getLayerScaleFactor(3)
+						),
+				scrX,
+				scrY,
+				null
+				);
 	}
 	
 	/** Moves the enemy down a set amount and reverses its direction. */

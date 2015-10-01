@@ -47,10 +47,13 @@ public abstract class Entity
 		{
 			renderColor = Color.green;
 		}
+		loadGraphics();
 	}
 	
 	/** Does the "thinking" for this entity. */
 	public abstract void update();
+	/** Pre-load any graphics for this entity. */
+	public abstract void loadGraphics();
 	
 	/** Get what type of entity this entity is.
 	 * @return (EntityType) the type of this entity

@@ -1,0 +1,4 @@
+-----Controls-----
+~ ESCAPE: Pause/Resume
+~ A & D: Move left and right
+~ SPACE: Fire (Can store up to 2 charges at a time)
